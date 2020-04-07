@@ -5,9 +5,7 @@ require("dotenv").config();
 const PORT = process.env.PORT;
 const mongodb = process.env.MONGO;
 app.use(express.json());
-app.use("/", (req, res) => {
-  res.json({ status: true });
-});
+app.use("/api", require("./src/routes"));
 app.listen(PORT, () => {
   mongoose
     .connect(mongodb, {

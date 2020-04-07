@@ -6,12 +6,36 @@ import AdminNavbar from "components/Navbars/AdminNavbar.js";
 import Sidebar from "components/Sidebar/Sidebar.js";
 
 import routes from "routes.js";
+// user context
+import { User } from "context/user";
+import axios from "axios";
 
 class Admin extends React.Component {
+  componentDidMount() {
+    axios
+      .get("/api/auth")
+      .then((response) => {
+        const { user } = response.data;
+        if (user === null) {
+          localStorage.removeItem("dashboard");
+          document.location.reload();
+        }
+        this.setState({ user });
+      })
+      .catch((error) => {
+        if (error) {
+          localStorage.removeItem("dashboard");
+        }
+      });
+  }
   componentDidUpdate(e) {
     document.documentElement.scrollTop = 0;
     document.scrollingElement.scrollTop = 0;
     this.refs.mainContent.scrollTop = 0;
+  }
+  constructor(prop) {
+    super(prop);
+    this.state = { user: null };
   }
   getRoutes = (routes) => {
     return routes.map((prop, key) => {
@@ -42,13 +66,13 @@ class Admin extends React.Component {
   };
   render() {
     return (
-      <>
+      <User.Provider value={this.state.user}>
         <Sidebar
           {...this.props}
           routes={routes}
           logo={{
             innerLink: "/admin/index",
-            imgSrc: require("assets/img/brand/argon-react.png"),
+            imgSrc: require("assets/img/brand/logo.png"),
             imgAlt: "...",
           }}
         />
@@ -62,7 +86,7 @@ class Admin extends React.Component {
             <Redirect from="*" to="/admin/index" />
           </Switch>
         </div>
-      </>
+      </User.Provider>
     );
   }
 }

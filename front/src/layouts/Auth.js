@@ -4,7 +4,7 @@ import { Route, Switch, Redirect } from "react-router-dom";
 import { Container, Row } from "reactstrap";
 
 // core components
-import AuthFooter from "components/Footers/AuthFooter.js";
+// import AuthFooter from "components/Footers/AuthFooter.js";
 
 import routes from "routes.js";
 
@@ -45,7 +45,7 @@ class Auth extends React.Component {
             </Row>
           </Container>
         </div>
-        <AuthFooter />
+        {/* <AuthFooter /> */}
       </>
     );
   }
