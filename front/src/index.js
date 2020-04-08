@@ -18,7 +18,6 @@ axios.interceptors.request.use((config) => {
   }
   return config;
 });
-
 const PrivateRoute = ({ render: Component, ...rest }) => (
   <Route
     {...rest}

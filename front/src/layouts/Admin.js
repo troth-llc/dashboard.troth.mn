@@ -11,6 +11,10 @@ import { User } from "context/user";
 import axios from "axios";
 
 class Admin extends React.Component {
+  constructor(prop) {
+    super(prop);
+    this.state = { user: null };
+  }
   componentDidMount() {
     axios
       .get("/api/auth")
@@ -33,10 +37,7 @@ class Admin extends React.Component {
     document.scrollingElement.scrollTop = 0;
     this.refs.mainContent.scrollTop = 0;
   }
-  constructor(prop) {
-    super(prop);
-    this.state = { user: null };
-  }
+
   getRoutes = (routes) => {
     return routes.map((prop, key) => {
       if (prop.layout === "/admin") {
@@ -62,7 +63,7 @@ class Admin extends React.Component {
         return routes[i].name;
       }
     }
-    return "Brand";
+    return "Troth";
   };
   render() {
     return (
