@@ -52,7 +52,7 @@ class Sidebar extends React.Component {
   createLinks = (routes) => {
     return routes.map((prop, key) => {
       return (
-        <NavItem key={key}>
+        <NavItem key={key} className={prop.hidden ? "d-none" : ""}>
           <NavLink
             to={prop.layout + prop.path}
             tag={NavLinkRRD}
@@ -196,25 +196,25 @@ class Sidebar extends React.Component {
             {/* Divider */}
             <hr className="my-3" />
             {/* Heading */}
-            <h6 className="navbar-heading text-muted">Documentation</h6>
+            <h6 className="navbar-heading text-muted">Example title</h6>
             {/* Navigation */}
             <Nav className="mb-md-3" navbar>
               <NavItem>
                 <NavLink href="#">
                   <i className="ni ni-spaceship" />
-                  Getting started
+                  Link #1
                 </NavLink>
               </NavItem>
               <NavItem>
                 <NavLink href="#">
                   <i className="ni ni-palette" />
-                  Foundation
+                  Link #2
                 </NavLink>
               </NavItem>
               <NavItem>
                 <NavLink href="#">
                   <i className="ni ni-ui-04" />
-                  Components
+                  Link #3
                 </NavLink>
               </NavItem>
             </Nav>
