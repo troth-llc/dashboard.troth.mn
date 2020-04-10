@@ -11,6 +11,7 @@ import {
   Spinner,
 } from "reactstrap";
 import axios from "axios";
+import moment from "moment";
 // core components
 import Header from "components/Headers/Header.js";
 
@@ -20,7 +21,7 @@ const User = (props) => {
     axios
       .post("/api/users/find", { id: props.match.params.id })
       .then((res) => setUser(res.data.user));
-  }, []);
+  }, [props.match.params.id]);
   return (
     <>
       <Header />
@@ -33,13 +34,21 @@ const User = (props) => {
                 <>
                   <Row className="justify-content-center">
                     <Col className="order-lg-2" lg="3">
-                      <div className="card-profile-image">
-                        <img
-                          alt="..."
-                          className="rounded-circle"
-                          src={require("assets/img/theme/team-4-800x800.jpg")}
-                        />
-                      </div>
+                      {user.avatar ? (
+                        <div className="card-profile-image">
+                          <img
+                            alt="..."
+                            className="rounded-circle"
+                            src={require("assets/img/theme/team-4-800x800.jpg")}
+                          />
+                        </div>
+                      ) : (
+                        <div className="card-profile-image">
+                          <div className="user--username">
+                            {user.username.charAt(0).toUpperCase()}
+                          </div>
+                        </div>
+                      )}
                     </Col>
                   </Row>
                   <CardHeader className="text-center border-0 pt-8 pt-md-4 pb-0 pb-md-4"></CardHeader>
@@ -48,15 +57,15 @@ const User = (props) => {
                       <div className="col">
                         <div className="card-profile-stats d-flex justify-content-center mt-md-5">
                           <div>
-                            <span className="heading">1</span>
+                            <span className="heading">{user.following}</span>
                             <span className="description">Following</span>
                           </div>
                           <div>
-                            <span className="heading">1</span>
+                            <span className="heading">{user.followers}</span>
                             <span className="description">Followers</span>
                           </div>
                           <div>
-                            <span className="heading">1</span>
+                            <span className="heading">{user.projects}</span>
                             <span className="description">Projects</span>
                           </div>
                         </div>
@@ -79,6 +88,9 @@ const User = (props) => {
                         Email: {user.email}
                         <br />
                         Phone:{user.phone ? user.phone : "N/A"}
+                      </div>
+                      <div className="h5">
+                        Joined {moment(user.created).fromNow()}
                       </div>
                       <div>
                         {user.website ? (

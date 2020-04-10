@@ -8,19 +8,22 @@ exports.get = function (req, res) {
 };
 exports.find = function (req, res) {
   const { id } = req.body;
-  console.log(id);
-  User.findById(id)
-    .select([
-      "name",
-      "username",
-      "email",
-      "phone",
-      "type",
-      "created",
-      "avatar",
-      "about",
-    ])
-    .then((user) => {
-      res.json({ status: true, user });
+  User.findById(id).then((user) => {
+    res.json({
+      status: true,
+      user: {
+        name: user.name,
+        username: user.username,
+        email: user.email,
+        phone: user.phone,
+        type: user.type,
+        created: user.created,
+        avatar: user.avatar,
+        about: user.about,
+        following: user.following.length,
+        followers: user.followers.length,
+        projects: user.projects.length,
+      },
     });
+  });
 };
