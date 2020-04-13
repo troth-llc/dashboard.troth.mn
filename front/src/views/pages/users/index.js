@@ -63,7 +63,9 @@ const Users = () => {
                               <tr key={user._id}>
                                 <th scope="row">
                                   <span className="mb-0 text-sm">
-                                    {user.name}
+                                    <Link to={`/admin/user/${user._id}`}>
+                                      {user.name}
+                                    </Link>
                                   </span>
                                 </th>
                                 <th scope="row">@{user.username}</th>

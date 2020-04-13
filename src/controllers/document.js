@@ -16,3 +16,14 @@ exports.get = (req, res) => {
     });
   });
 };
+exports.find = (req, res) => {
+  const { id } = req.body;
+  Document.findOne({ _id: id }).then((document) => {
+    User.findById(document.user)
+      .select("name username avatar phone verification_status email created")
+      .exec()
+      .then((user) => {
+        return res.json({ result: { document, user } });
+      });
+  });
+};

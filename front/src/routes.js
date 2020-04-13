@@ -6,6 +6,7 @@ import Blank from "views/pages/blank.js";
 import Users from "views/pages/users";
 import User from "views/pages/users/find.js";
 import Verify from "views/pages/document";
+import Document from "views/pages/document/find";
 
 var routes = [
   {
@@ -28,6 +29,14 @@ var routes = [
     icon: "ni ni-bullet-list-67 text-blue",
     component: Verify,
     layout: "/admin",
+  },
+  {
+    path: "/document/:id",
+    name: "Document",
+    icon: "ni ni-bullet-list-67 text-blue",
+    component: Document,
+    layout: "/admin",
+    hidden: true,
   },
   {
     path: "/user/:id",

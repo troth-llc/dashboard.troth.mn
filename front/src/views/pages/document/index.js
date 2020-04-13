@@ -20,7 +20,7 @@ import axios from "axios";
 import moment from "moment";
 // core components
 import Header from "components/Headers/Header.js";
-
+import "./style.scss";
 const Verify = () => {
   const [state, setState] = useState(null);
   useEffect(() => {
@@ -92,7 +92,7 @@ const Verify = () => {
                                       right
                                     >
                                       <Link
-                                        to={`/admin/document/${state._id}`}
+                                        to={`/admin/document/${state.document._id}`}
                                         className="dropdown-item"
                                       >
                                         View

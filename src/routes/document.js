@@ -12,4 +12,5 @@ const validate = require("../middleware/validator");
  *       200:
  */
 router.get("/", token, document.get);
+router.post("/find", token, document.find);
 module.exports = router;
