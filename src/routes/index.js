@@ -6,5 +6,6 @@ router.get("/", function (req, res) {
 });
 router.use("/auth", require("./auth.js"));
 router.use("/users", require("./users.js"));
+router.use("/document", require("./document.js"));
 
 module.exports = router;

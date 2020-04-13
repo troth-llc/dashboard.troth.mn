@@ -3,8 +3,9 @@ import Profile from "views/pages/Profile.js";
 import Login from "views/pages/Login.js";
 import Tables from "views/pages/Tables.js";
 import Blank from "views/pages/blank.js";
-import Users from "views/pages/users.js";
-import User from "views/pages/user.js";
+import Users from "views/pages/users";
+import User from "views/pages/users/find.js";
+import Verify from "views/pages/document";
 
 var routes = [
   {
@@ -19,6 +20,13 @@ var routes = [
     name: "Users",
     icon: "ni ni-bullet-list-67 text-blue",
     component: Users,
+    layout: "/admin",
+  },
+  {
+    path: "/verify",
+    name: "Document verification",
+    icon: "ni ni-bullet-list-67 text-blue",
+    component: Verify,
     layout: "/admin",
   },
   {
