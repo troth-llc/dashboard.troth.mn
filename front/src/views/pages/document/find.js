@@ -1,7 +1,15 @@
 import React, { useState, useEffect } from "react";
 // react component that copies the given text inside your clipboard
 // reactstrap components
-import { Card, CardBody, Container, Row, Col, Spinner } from "reactstrap";
+import {
+  Card,
+  CardBody,
+  Container,
+  Row,
+  Col,
+  Spinner,
+  Button,
+} from "reactstrap";
 import axios from "axios";
 import moment from "moment";
 // core components
@@ -9,6 +17,7 @@ import Header from "components/Headers/Header.js";
 import { Link } from "react-router-dom";
 const Document = (props) => {
   const [state, setState] = useState(null);
+  const [disabled, setDisabled] = useState(false);
   useEffect(() => {
     axios
       .post("/api/document/find", { id: props.match.params.id })
@@ -72,6 +81,50 @@ const Document = (props) => {
                     <Col>attachment front</Col>
                     <Col>attachment back</Col>
                   </Row>
+                  <div
+                    className={`d-flex justify-content-${
+                      state.document.status !== "verified"
+                        ? "between"
+                        : "center"
+                    } mt-5`}
+                  >
+                    <Button
+                      className="mr-4"
+                      color="error"
+                      size="md"
+                      disabled={disabled}
+                      onClick={() => {
+                        setDisabled(true);
+                        axios
+                          .get("/api/document/decline/" + state.document._id)
+                          .then((res) => {
+                            if (res.data.status) window.location.reload();
+                            else console.log("some thing went wrong");
+                          });
+                      }}
+                    >
+                      Decline, Remove Document
+                    </Button>
+                    {state.document.status !== "verified" ? (
+                      <Button
+                        className="mr-4"
+                        color="info"
+                        size="md"
+                        disabled={disabled}
+                        onClick={() => {
+                          setDisabled(true);
+                          axios
+                            .get("/api/document/approve/" + state.document._id)
+                            .then((res) => {
+                              if (res.data.status) window.location.reload();
+                              else console.log("some thing went wrong");
+                            });
+                        }}
+                      >
+                        Confirm
+                      </Button>
+                    ) : null}
+                  </div>
                 </CardBody>
               ) : (
                 <div className="text-center mt-4 mb-4">

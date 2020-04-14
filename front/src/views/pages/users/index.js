@@ -112,7 +112,7 @@ const Users = () => {
                                         onClick={(e) => e.preventDefault()}
                                         style={{ color: "red" }}
                                       >
-                                        Delete
+                                        Disable
                                       </DropdownItem>
                                     </DropdownMenu>
                                   </UncontrolledDropdown>

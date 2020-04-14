@@ -27,3 +27,36 @@ exports.find = (req, res) => {
       });
   });
 };
+exports.approve = (req, res) => {
+  const { id } = req.params;
+  Document.findById({ _id: id }).then((document) => {
+    document.status = "verified";
+    document.save((err) => {
+      if (err) console.log(err);
+      User.findById(document.user).then((user) => {
+        user.verification_status = "verified";
+        user.verified = true;
+        user.save((err) => {
+          if (err) console.log(err);
+          res.json({ status: true });
+        });
+      });
+    });
+  });
+};
+exports.decline = (req, res) => {
+  const { id: _id } = req.params;
+  res.json({ status: true });
+  Document.find({ _id })
+    .remove()
+    .exec((err, data) => {
+      User.findById(data.user).then((user) => {
+        user.verification_status = null;
+        user.verified = false;
+        user.save((err) => {
+          if (err) console.log(err);
+          res.json({ status: true });
+        });
+      });
+    });
+};
