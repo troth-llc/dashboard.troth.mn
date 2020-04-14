@@ -45,18 +45,16 @@ exports.approve = (req, res) => {
   });
 };
 exports.decline = (req, res) => {
-  const { id: _id } = req.params;
-  res.json({ status: true });
-  Document.find({ _id })
-    .remove()
-    .exec((err, data) => {
-      User.findById(data.user).then((user) => {
-        user.verification_status = null;
-        user.verified = false;
-        user.save((err) => {
-          if (err) console.log(err);
-          res.json({ status: true });
-        });
+  const { id } = req.params;
+  Document.findById(id).then((data) => {
+    User.findById(data.user).then((user) => {
+      user.verification_status = null;
+      user.verified = false;
+      data.remove();
+      user.save((err) => {
+        if (err) console.log(err);
+        res.json({ status: true });
       });
     });
+  });
 };

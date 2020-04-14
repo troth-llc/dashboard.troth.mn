@@ -14,7 +14,7 @@ import axios from "axios";
 import moment from "moment";
 // core components
 import Header from "components/Headers/Header.js";
-import { Link } from "react-router-dom";
+import { Link, Redirect } from "react-router-dom";
 const Document = (props) => {
   const [state, setState] = useState(null);
   const [disabled, setDisabled] = useState(false);
@@ -98,8 +98,9 @@ const Document = (props) => {
                         axios
                           .get("/api/document/decline/" + state.document._id)
                           .then((res) => {
-                            if (res.data.status) window.location.reload();
-                            else console.log("some thing went wrong");
+                            if (res.data.status) {
+                              return <Redirect to="/admin/verify" />;
+                            } else console.log("some thing went wrong");
                           });
                       }}
                     >
