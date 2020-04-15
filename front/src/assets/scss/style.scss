@@ -23,3 +23,10 @@
   background: #00000096;
   color: white;
 }
+.form-control {
+  color: #000;
+  &:hover,
+  &:focus {
+    color: #000;
+  }
+}

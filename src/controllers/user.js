@@ -20,6 +20,7 @@ exports.find = function (req, res) {
         created: user.created,
         avatar: user.avatar,
         about: user.about,
+        website: user.website,
         following: user.following.length,
         followers: user.followers.length,
         projects: user.projects.length,
