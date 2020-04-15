@@ -10,6 +10,8 @@ import {
   Spinner,
   Button,
 } from "reactstrap";
+import { Modal, ModalBody, ModalFooter } from "reactstrap";
+
 import axios from "axios";
 import moment from "moment";
 // core components
@@ -17,7 +19,11 @@ import Header from "components/Headers/Header.js";
 import { Link, Redirect } from "react-router-dom";
 const Document = (props) => {
   const [state, setState] = useState(null);
+  const [reason, setReason] = useState("");
   const [disabled, setDisabled] = useState(false);
+  const [modal, setModal] = useState(false);
+  const toggle = () => setModal(!modal);
+
   useEffect(() => {
     axios
       .post("/api/document/find", { id: props.match.params.id })
@@ -93,16 +99,7 @@ const Document = (props) => {
                       color="error"
                       size="md"
                       disabled={disabled}
-                      onClick={() => {
-                        setDisabled(true);
-                        axios
-                          .get("/api/document/decline/" + state.document._id)
-                          .then((res) => {
-                            if (res.data.status) {
-                              return <Redirect to="/admin/verify" />;
-                            } else console.log("some thing went wrong");
-                          });
-                      }}
+                      onClick={toggle}
                     >
                       Decline, Remove Document
                     </Button>
@@ -136,6 +133,48 @@ const Document = (props) => {
           </Col>
         </Row>
       </Container>
+      <Modal isOpen={modal} centered>
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            setDisabled(true);
+            axios
+              .post("/api/document/decline", {
+                id: state.document._id,
+                reason,
+              })
+              .then((res) => {
+                if (res.data.status) {
+                  return <Redirect to="/admin/verify" />;
+                } else console.log("some thing went wrong");
+              });
+          }}
+        >
+          <div className="modal-header">
+            <h5 className="modal-title">Decline</h5>
+          </div>
+          <ModalBody>
+            <div className="form-group">
+              <label htmlFor="reason">Enter reason to decline</label>
+              <textarea
+                className="form-control"
+                id="reason"
+                rows="3"
+                required
+                onChange={(e) => setReason(e.target.value)}
+              ></textarea>
+            </div>
+          </ModalBody>
+          <ModalFooter>
+            <Button color="primary" type="submit" disabled={disabled}>
+              Decline
+            </Button>
+            <Button color="secondary" onClick={toggle} disabled={disabled}>
+              Cancel
+            </Button>
+          </ModalFooter>
+        </form>
+      </Modal>
     </>
   );
 };
