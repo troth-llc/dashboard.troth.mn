@@ -23,6 +23,10 @@ import {
   FormGroup,
   Input,
   Alert,
+  InputGroup,
+  InputGroupAddon,
+  InputGroupText,
+  Form,
 } from "reactstrap";
 // UwU
 import { Link } from "react-router-dom";
@@ -36,6 +40,7 @@ const Users = () => {
   const [edit, setEdit] = useState(null);
   const [modal, setModal] = useState(false);
   const [error, setError] = useState(null);
+  const [search, setSearch] = useState("");
   const toggle = () => setModal(!modal);
   useEffect(() => {
     axios.get("/api/users").then((res) => setUsers(res.data.user));
@@ -48,9 +53,43 @@ const Users = () => {
         {/* Table */}
         <Row>
           <div className="col">
-            <Card className=" shadow">
-              <CardHeader className="bg-transparent">
-                <h3 className="mb-0">Users</h3>
+            <Card className="shadow">
+              <CardHeader className="bg-transparent d-flex">
+                <h3 className="mb-0" style={{ lineHeight: "50px" }}>
+                  Users
+                </h3>
+                <Form
+                  className="navbar-search navbar-search-dark form-inline mr-3 d-none d-md-flex ml-lg-auto"
+                  onSubmit={(e) => {
+                    e.preventDefault();
+                    setUsers(null);
+                    if (search.trim()) {
+                      axios
+                        .post("/api/users/search", { search: search.trim() })
+                        .then((res) => setUsers(res.data.result));
+                    }
+                  }}
+                >
+                  <Button color="info" type="button" className="mr-3">
+                    Add user
+                  </Button>
+                  <FormGroup className="mb-0">
+                    <InputGroup className="input-group-alternative">
+                      <InputGroupAddon addonType="prepend">
+                        <InputGroupText>
+                          <i className="fas fa-search text-muted" />
+                        </InputGroupText>
+                      </InputGroupAddon>
+                      <Input
+                        placeholder="Search"
+                        type="text"
+                        className="text-dark"
+                        value={search}
+                        onChange={(e) => setSearch(e.target.value)}
+                      />
+                    </InputGroup>
+                  </FormGroup>
+                </Form>
               </CardHeader>
               <CardBody>
                 <Row>

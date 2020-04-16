@@ -86,3 +86,18 @@ exports.update = (req, res) => {
     });
   });
 };
+exports.search = (req, res) => {
+  let search = new RegExp(req.body.search, "i");
+  User.find({
+    $or: [
+      { name: search },
+      { username: search },
+      { email: search },
+      { phone: search },
+    ],
+  })
+    .select(["name", "username", "email", "phone", "type", "created"])
+    .then((result) => {
+      res.json({ status: true, result });
+    });
+};
