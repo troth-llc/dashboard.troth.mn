@@ -3,6 +3,7 @@ const router = express.Router();
 const users = require("../controllers/user");
 // middleware
 const token = require("../middleware/token");
+const validate = require("../middleware/validator");
 /**
  * /api/users:
  *   post:
@@ -12,4 +13,5 @@ const token = require("../middleware/token");
  */
 router.get("/", token, users.get);
 router.post("/find", token, users.find);
+router.post("/update", validate.update, token, users.update);
 module.exports = router;

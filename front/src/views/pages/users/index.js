@@ -16,7 +16,14 @@ import {
   Button,
   Label,
 } from "reactstrap";
-import { Modal, ModalBody, ModalFooter, FormGroup, Input } from "reactstrap";
+import {
+  Modal,
+  ModalBody,
+  ModalFooter,
+  FormGroup,
+  Input,
+  Alert,
+} from "reactstrap";
 // UwU
 import { Link } from "react-router-dom";
 import axios from "axios";
@@ -28,6 +35,7 @@ const Users = () => {
   const [disabled, setDisabled] = useState(false);
   const [edit, setEdit] = useState(null);
   const [modal, setModal] = useState(false);
+  const [error, setError] = useState(null);
   const toggle = () => setModal(!modal);
   useEffect(() => {
     axios.get("/api/users").then((res) => setUsers(res.data.user));
@@ -111,6 +119,7 @@ const Users = () => {
                                       <DropdownItem
                                         onClick={() => {
                                           setEdit(null);
+                                          setError(null);
                                           toggle();
                                           axios
                                             .post("/api/users/find", {
@@ -156,13 +165,33 @@ const Users = () => {
             onSubmit={(e) => {
               e.preventDefault();
               setDisabled(true);
-              console.log(edit);
+              axios
+                .post("/api/users/update", {
+                  ...edit,
+                })
+                .then((res) => {
+                  res.data.status
+                    ? window.location.reload()
+                    : setError(res.data.errors);
+                });
+              setDisabled(false);
             }}
           >
             <div className="modal-header">
               <h5 className="modal-title">User info</h5>
             </div>
             <ModalBody>
+              {error ? (
+                <Alert color="danger">
+                  {error.map((err, index) => {
+                    return (
+                      <div key={index}>
+                        {err.param}: {err.msg} <br />
+                      </div>
+                    );
+                  })}
+                </Alert>
+              ) : null}
               <div>
                 <Row>
                   <Col lg="6">
@@ -194,6 +223,7 @@ const Users = () => {
                         }
                         type="text"
                         name="username"
+                        pattern="^(?!.*\.\.)(?!.*\.$)[^\W][\w.]{0,29}$"
                         required
                       />
                     </FormGroup>
@@ -231,12 +261,12 @@ const Users = () => {
                       />
                     </FormGroup>
                   </Col>
-                  <Col lg="6">
+                  <Col lg="12">
                     <FormGroup>
-                      <label className="form-control-label">Phone</label>
+                      <label className="form-control-label">Website</label>
                       <Input
                         className="form-control-alternative"
-                        defaultValue={edit.phone}
+                        defaultValue={edit.website}
                         placeholder="Website"
                         onChange={(e) =>
                           setEdit({ ...edit, [e.target.name]: e.target.value })
@@ -252,7 +282,6 @@ const Users = () => {
                       <textarea
                         className="form-control"
                         rows="3"
-                        required
                         name="about"
                         onChange={(e) =>
                           setEdit({ ...edit, [e.target.name]: e.target.value })
@@ -260,9 +289,9 @@ const Users = () => {
                       ></textarea>
                     </FormGroup>
                   </Col>
-                  <Col>
+                  <Col lg="6">
                     <FormGroup>
-                      <Label for="type">Select</Label>
+                      <Label for="type">User type</Label>
                       <Input
                         type="select"
                         name="type"
@@ -276,6 +305,25 @@ const Users = () => {
                         <option value="other"> - </option>
                         <option value="member">Member</option>
                         <option value="other"> - </option>
+                      </Input>
+                    </FormGroup>
+                  </Col>
+                  <Col lg="6">
+                    <FormGroup>
+                      <Label for="gender">Gender</Label>
+                      <Input
+                        type="select"
+                        name="gender"
+                        id="gender"
+                        value={edit.gender}
+                        required
+                        onChange={(e) =>
+                          setEdit({ ...edit, [e.target.name]: e.target.value })
+                        }
+                      >
+                        <option value="male">Male</option>
+                        <option value="female">Female</option>
+                        <option value="custom">Custom</option>
                       </Input>
                     </FormGroup>
                   </Col>
