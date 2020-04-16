@@ -15,4 +15,5 @@ router.get("/", token, users.get);
 router.post("/find", token, users.find);
 router.post("/update", validate.update, token, users.update);
 router.post("/search", token, users.search);
+router.post("/create", validate.update, token, users.create);
 module.exports = router;
