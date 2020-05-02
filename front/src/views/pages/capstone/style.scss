@@ -1,9 +1,22 @@
 .course-card {
-  color: unset;
+  a {
+    color: unset;
+  }
   &:hover {
     color: black;
   }
   .card-text {
     font-size: 13px;
+  }
+  .dropdown {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    button {
+      background-color: transparent;
+      box-shadow: none;
+      color: #494949;
+      border-color: #898989;
+    }
   }
 }

@@ -14,14 +14,14 @@ import {
   CardText,
 } from "reactstrap";
 import {
+  DropdownMenu,
+  DropdownToggle,
+  Badge,
+  UncontrolledDropdown,
+  Modal,
   FormGroup,
   Input,
-  InputGroup,
-  InputGroupAddon,
-  InputGroupText,
-  Form,
-  UncontrolledTooltip,
-  Badge,
+  ModalBody,
 } from "reactstrap";
 // UwU
 import { Link } from "react-router-dom";
@@ -32,7 +32,8 @@ import Header from "components/Headers/Header.js";
 import "./style.scss";
 const Course = () => {
   const [state, setState] = useState(null);
-  const [search, setSearch] = useState("");
+  const [modal, openmodal] = useState(false);
+  const [category, setcategory] = useState({});
   const get = () => {
     setState(null);
     axios.get("/api/course").then((res) => setState(res.data.result));
@@ -49,65 +50,21 @@ const Course = () => {
         <Row>
           <div className="col">
             <Card className=" shadow">
-              <CardHeader className="bg-transparent d-flex">
+              <CardHeader className="bg-transparent d-flex justify-content-between">
                 <h3 className="mb-0" style={{ lineHeight: "50px" }}>
                   Capstone Course Categories
                 </h3>
-                <Form
-                  className="navbar-search navbar-search-dark form-inline mr-3 d-none d-md-flex ml-lg-auto"
-                  onSubmit={(e) => {
-                    e.preventDefault();
-                    if (search.trim()) {
-                      setState(null);
-                      axios
-                        .post("/api/course/search", { search: search.trim() })
-                        .then((res) => setState(res.data.result));
-                    }
+
+                <Button
+                  color="info"
+                  className="mr-3"
+                  onClick={() => {
+                    setcategory({});
+                    openmodal(true);
                   }}
                 >
-                  <Button
-                    color="info"
-                    type="button"
-                    className="mr-3"
-                    onClick={() => {
-                      // setSearch("");
-                    }}
-                  >
-                    Add category
-                  </Button>
-                  <FormGroup className="mb-0">
-                    <InputGroup className="input-group-alternative">
-                      <InputGroupAddon addonType="prepend">
-                        <InputGroupText>
-                          <i className="fas fa-search text-muted" />
-                        </InputGroupText>
-                      </InputGroupAddon>
-                      <Input
-                        placeholder="Search"
-                        type="text"
-                        className="text-dark"
-                        value={search}
-                        onChange={(e) => setSearch(e.target.value)}
-                      />
-                      <UncontrolledTooltip placement="top" target="cancel">
-                        Cancel search
-                      </UncontrolledTooltip>
-                      <InputGroupAddon
-                        id="cancel"
-                        addonType="append"
-                        style={{ cursor: "pointer" }}
-                        onClick={() => {
-                          setSearch("");
-                          get();
-                        }}
-                      >
-                        <InputGroupText>
-                          <i className="fas fa-trash text-muted" />
-                        </InputGroupText>
-                      </InputGroupAddon>
-                    </InputGroup>
-                  </FormGroup>
-                </Form>
+                  Add category
+                </Button>
               </CardHeader>
               <CardBody>
                 <Row>
@@ -117,15 +74,40 @@ const Course = () => {
                         {state.map((state, index) => {
                           return (
                             <Col sm={6} lg={3} md={6} xl={3} key={index}>
-                              <Link to={`/${index}`} className="course-card">
-                                <Card>
-                                  <CardImg
-                                    top
-                                    width="100%"
-                                    src={state.cover}
-                                    alt={state.name}
-                                  />
-                                  <CardBody>
+                              <Card className="course-card">
+                                <CardImg
+                                  top
+                                  width="100%"
+                                  src={state.cover}
+                                  alt={state.name}
+                                />
+                                <UncontrolledDropdown>
+                                  <DropdownToggle
+                                    className="btn-icon-only"
+                                    role="button"
+                                    size="sm"
+                                    onClick={(e) => e.preventDefault()}
+                                  >
+                                    <i className="fas fa-ellipsis-v" />
+                                  </DropdownToggle>
+                                  <DropdownMenu
+                                    className="dropdown-menu-arrow"
+                                    right
+                                  >
+                                    <a
+                                      href="#edit"
+                                      className="dropdown-item"
+                                      onClick={(e) => {
+                                        openmodal(true);
+                                        e.preventDefault();
+                                      }}
+                                    >
+                                      Edit
+                                    </a>
+                                  </DropdownMenu>
+                                </UncontrolledDropdown>
+                                <CardBody>
+                                  <Link to={`/${index}`}>
                                     <CardSubtitle>{state.name}</CardSubtitle>
                                     <CardText>{state.description}</CardText>
                                     <p>
@@ -136,9 +118,9 @@ const Course = () => {
                                         {state.teacher} Teacher
                                       </Badge>
                                     </p>
-                                  </CardBody>
-                                </Card>
-                              </Link>
+                                  </Link>
+                                </CardBody>
+                              </Card>
                             </Col>
                           );
                         })}
@@ -155,6 +137,52 @@ const Course = () => {
           </div>
         </Row>
       </Container>
+      <Modal isOpen={modal} centered>
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            // setDisabled(true);
+            // axios
+            //   .post("/api//create", {
+            //     ...save,
+            //   })
+            //   .then((res) => {
+            //     res.data.status
+            //       ? window.location.reload()
+            //       : setError(res.data.errors);
+            //     // setDisabled(false);
+            //   });
+          }}
+        >
+          <div className="modal-header">
+            <h5 className="modal-title">Create category</h5>
+          </div>
+          <ModalBody>
+            <Row>
+              <Col lg="6">
+                <FormGroup>
+                  <label className="form-control-label">Name</label>
+                  <Input
+                    className="form-control-alternative"
+                    defaultValue={category.name}
+                    autoFocus={true}
+                    placeholder="Name"
+                    name="name"
+                    type="text"
+                    required
+                    onChange={(e) =>
+                      setcategory({
+                        ...category,
+                        [e.target.name]: [e.target.value],
+                      })
+                    }
+                  />
+                </FormGroup>
+              </Col>
+            </Row>
+          </ModalBody>
+        </form>
+      </Modal>
     </>
   );
 };
