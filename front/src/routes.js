@@ -7,7 +7,8 @@ import Users from "views/pages/users";
 import User from "views/pages/users/find.js";
 import Verify from "views/pages/document";
 import Document from "views/pages/document/find";
-
+// capstone
+import Course from "views/pages/capstone/course";
 var routes = [
   {
     path: "/index",
@@ -67,6 +68,15 @@ var routes = [
     name: "Tables",
     icon: "ni ni-bullet-list-67 text-red",
     component: Tables,
+    layout: "/admin",
+    hidden: true,
+  },
+  // capstone
+  {
+    path: "/capstone/course",
+    name: "Course",
+    icon: "ni ni-bullet-list-67 text-red",
+    component: Course,
     layout: "/admin",
     hidden: true,
   },

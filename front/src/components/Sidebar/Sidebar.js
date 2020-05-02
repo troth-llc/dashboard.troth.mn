@@ -196,26 +196,20 @@ class Sidebar extends React.Component {
             {/* Divider */}
             <hr className="my-3" />
             {/* Heading */}
-            <h6 className="navbar-heading text-muted">Example title</h6>
+            <h6 className="navbar-heading text-muted">Capstone</h6>
             {/* Navigation */}
             <Nav className="mb-md-3" navbar>
               <NavItem>
-                <NavLink href="#">
-                  <i className="ni ni-spaceship" />
-                  Link #1
-                </NavLink>
+                <NavLinkRRD to="/admin/capstone/course" className="nav-link">
+                  <i className="ni ni-book-bookmark" />
+                  Courses
+                </NavLinkRRD>
               </NavItem>
               <NavItem>
-                <NavLink href="#">
-                  <i className="ni ni-palette" />
-                  Link #2
-                </NavLink>
-              </NavItem>
-              <NavItem>
-                <NavLink href="#">
-                  <i className="ni ni-ui-04" />
-                  Link #3
-                </NavLink>
+                <NavLinkRRD to="/admin/capstone/teacher" className="nav-link">
+                  <i className="ni ni-hat-3" />
+                  Teachers
+                </NavLinkRRD>
               </NavItem>
             </Nav>
           </Collapse>

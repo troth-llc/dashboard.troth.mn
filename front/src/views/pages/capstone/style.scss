@@ -1,0 +1,9 @@
+.course-card {
+  color: unset;
+  &:hover {
+    color: black;
+  }
+  .card-text {
+    font-size: 13px;
+  }
+}
