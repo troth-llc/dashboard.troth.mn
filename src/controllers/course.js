@@ -12,3 +12,6 @@ exports.index = (req, res) => {
   ];
   res.json({ status: true, result });
 };
+exports.create_category = (req, res) => {
+  res.json({ status: true });
+};

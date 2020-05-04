@@ -22,6 +22,7 @@ import {
   FormGroup,
   Input,
   ModalBody,
+  ModalFooter,
 } from "reactstrap";
 // UwU
 import { Link } from "react-router-dom";
@@ -34,6 +35,9 @@ const Course = () => {
   const [state, setState] = useState(null);
   const [modal, openmodal] = useState(false);
   const [category, setcategory] = useState({});
+  const [disabled, disable] = useState(false);
+  const [preview, setPreview] = useState(null);
+  const [errorCover, setErrorCover] = useState(null);
   const get = () => {
     setState(null);
     axios.get("/api/course").then((res) => setState(res.data.result));
@@ -114,9 +118,6 @@ const Course = () => {
                                       <Badge color="primary">
                                         {state.course} Course
                                       </Badge>
-                                      <Badge color="success" className="ml-2">
-                                        {state.teacher} Teacher
-                                      </Badge>
                                     </p>
                                   </Link>
                                 </CardBody>
@@ -141,17 +142,16 @@ const Course = () => {
         <form
           onSubmit={(e) => {
             e.preventDefault();
-            // setDisabled(true);
-            // axios
-            //   .post("/api//create", {
-            //     ...save,
-            //   })
-            //   .then((res) => {
-            //     res.data.status
-            //       ? window.location.reload()
-            //       : setError(res.data.errors);
-            //     // setDisabled(false);
-            //   });
+            console.log(category);
+            disable(true);
+            axios
+              .post("/api/course/category", {
+                ...category,
+              })
+              .then((res) => {
+                res.data.status ? window.location.reload() : console.log("1");
+                disable(false);
+              });
           }}
         >
           <div className="modal-header">
@@ -159,7 +159,7 @@ const Course = () => {
           </div>
           <ModalBody>
             <Row>
-              <Col lg="6">
+              <Col lg="12">
                 <FormGroup>
                   <label className="form-control-label">Name</label>
                   <Input
@@ -173,14 +173,99 @@ const Course = () => {
                     onChange={(e) =>
                       setcategory({
                         ...category,
-                        [e.target.name]: [e.target.value],
+                        [e.target.name]: e.target.value,
                       })
                     }
                   />
                 </FormGroup>
               </Col>
+              <Col lg="12">
+                {!preview ? (
+                  <FormGroup>
+                    <label className="form-control-label">Cover image</label>
+                    <Input
+                      type="file"
+                      name="file"
+                      id="preview-image"
+                      required
+                      accept="image/x-png,image/gif,image/jpeg"
+                      onChange={(e) => {
+                        setErrorCover(null);
+                        var file = e.target.files[0];
+                        var ext = file.name
+                          .substring(file.name.lastIndexOf(".") + 1)
+                          .toLowerCase();
+                        if (
+                          file &&
+                          (ext === "png" || ext === "jpeg" || ext === "jpg")
+                        ) {
+                          var reader = new FileReader();
+                          reader.onload = function (e) {
+                            setPreview(e.target.result);
+                          };
+
+                          reader.readAsDataURL(file);
+                          setcategory({
+                            ...category,
+                            cover: e.target.files[0],
+                          });
+                        } else {
+                          setErrorCover("invalid image");
+                        }
+                      }}
+                    />
+                    <span className="text-red mt-2">{errorCover}</span>
+                  </FormGroup>
+                ) : null}
+                {preview ? (
+                  <div className="position-relative">
+                    <img
+                      src={preview}
+                      className="w-100"
+                      alt="course category cover preview"
+                    />
+                    <button
+                      className="btn btn-link pl-0"
+                      type="button"
+                      onClick={() => setPreview(null)}
+                    >
+                      remove image
+                    </button>
+                  </div>
+                ) : null}
+              </Col>
+              <Col lg="12">
+                <FormGroup>
+                  <label className="form-control-label">Description</label>
+                  <textarea
+                    className="form-control"
+                    rows="3"
+                    name="description"
+                    placeholder="Description"
+                    required
+                    onChange={(e) =>
+                      setcategory({
+                        ...category,
+                        [e.target.name]: e.target.value,
+                      })
+                    }
+                  ></textarea>
+                </FormGroup>
+              </Col>
             </Row>
           </ModalBody>
+          <ModalFooter>
+            <Button color="primary" type="submit" disabled={disabled}>
+              Save
+            </Button>
+            <Button
+              color="secondary"
+              onClick={() => openmodal(false)}
+              disabled={disabled}
+            >
+              Cancel
+            </Button>
+          </ModalFooter>
         </form>
       </Modal>
     </>
