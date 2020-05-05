@@ -1,17 +1,21 @@
+const Category = require("../models/category");
+const { validationResult } = require("express-validator");
 exports.index = (req, res) => {
-  const result = [
-    {
-      name: "Hello Troth",
-      description:
-        "Some quick example text to build on the card title and make up the bulk of the card's content.",
-      cover: "https://reactstrap.github.io/assets/318x180.svg",
-      course: 2,
-      teacher: 23,
-      created: new Date(),
-    },
-  ];
-  res.json({ status: true, result });
+  Category.find().then((result) => {
+    return res.json({ status: true, result });
+  });
 };
 exports.create_category = (req, res) => {
-  res.json({ status: true });
+  const errors = validationResult(req);
+  if (!errors.isEmpty())
+    return res.status(200).json({ errors: errors.array() });
+  else {
+    const { name, description } = req.body;
+    const category = new Category({ name, description });
+    category.save((err) => {
+      if (err) console.log(err);
+      else return res.json({ status: true });
+    });
+  }
 };
+exports.find_category = (req, res) => {};

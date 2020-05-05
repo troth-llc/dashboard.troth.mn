@@ -64,3 +64,13 @@ exports.update = [
     })
     .withMessage("Must be between 2 and 450 in length"),
 ];
+// capstone
+exports.create_category = [
+  check("name").isLength({
+    min: 2,
+    max: 72,
+  }),
+  check("description").isLength({
+    min: 2,
+  }),
+];

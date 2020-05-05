@@ -142,10 +142,9 @@ const Course = () => {
         <form
           onSubmit={(e) => {
             e.preventDefault();
-            console.log(category);
             disable(true);
             axios
-              .post("/api/course/category", {
+              .post("/api/course/create_category", {
                 ...category,
               })
               .then((res) => {
