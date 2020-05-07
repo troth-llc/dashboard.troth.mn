@@ -23,6 +23,7 @@ import {
   Input,
   ModalBody,
   ModalFooter,
+  Alert,
 } from "reactstrap";
 // UwU
 import { Link } from "react-router-dom";
@@ -38,15 +39,19 @@ const Course = () => {
   const [disabled, disable] = useState(false);
   const [preview, setPreview] = useState(null);
   const [errorCover, setErrorCover] = useState(null);
+  const [error, setError] = useState(null);
   const previewInput = useRef(null);
-  const get = () => {
-    setState(null);
-    axios.get("/api/course").then((res) => setState(res.data.result));
+  const get = (id) => {
+    id
+      ? axios
+          .get("/api/course/category/" + id)
+          .then((res) => setcategory(res.data.result))
+      : axios.get("/api/course").then((res) => setState(res.data.result));
   };
   useEffect(() => {
     get();
   }, []);
-  useEffect(() => {}, [modal]);
+  useEffect(() => {}, [modal, category.cover]);
   return (
     <>
       <Header />
@@ -77,9 +82,9 @@ const Course = () => {
                   <Col className="table-data">
                     {state ? (
                       <Row>
-                        {state.map((state, index) => {
+                        {state.map((state) => {
                           return (
-                            <Col sm={6} lg={3} md={6} xl={3} key={index}>
+                            <Col sm={6} lg={3} md={6} xl={3} key={state._id}>
                               <Card className="course-card">
                                 <CardImg
                                   top
@@ -105,6 +110,8 @@ const Course = () => {
                                       className="dropdown-item"
                                       onClick={(e) => {
                                         openmodal(true);
+                                        setcategory({});
+                                        get(state._id);
                                         e.preventDefault();
                                       }}
                                     >
@@ -113,12 +120,14 @@ const Course = () => {
                                   </DropdownMenu>
                                 </UncontrolledDropdown>
                                 <CardBody>
-                                  <Link to={`/${index}`}>
+                                  <Link
+                                    to={`/admin/capstome/course/category/${state._id}`}
+                                  >
                                     <CardSubtitle>{state.name}</CardSubtitle>
                                     <CardText>{state.description}</CardText>
-                                    <p>
+                                    <p className="mb-0">
                                       <Badge color="primary">
-                                        {state.course} Course
+                                        {state.course} Courses
                                       </Badge>
                                     </p>
                                   </Link>
@@ -158,7 +167,9 @@ const Course = () => {
               },
               data: upload,
             }).then((res) => {
-              res.data.status ? window.location.reload() : console.log("1");
+              res.data.status
+                ? window.location.reload()
+                : setError(res.data.errors);
               disable(false);
             });
           }}
@@ -167,6 +178,17 @@ const Course = () => {
             <h5 className="modal-title">Create category</h5>
           </div>
           <ModalBody>
+            {error ? (
+              <Alert color="danger">
+                {error.map((err, index) => {
+                  return (
+                    <div key={index}>
+                      {err.param}: {err.msg} <br />
+                    </div>
+                  );
+                })}
+              </Alert>
+            ) : null}
             <Row>
               <Col lg="12">
                 <FormGroup>
@@ -189,7 +211,9 @@ const Course = () => {
                 </FormGroup>
               </Col>
               <Col lg="12">
-                <FormGroup className={preview ? "d-none" : "d-block"}>
+                <FormGroup
+                  className={category.cover || preview ? "d-none" : "d-block"}
+                >
                   <label className="form-control-label">Cover image</label>
                   <input
                     type="file"
@@ -223,18 +247,36 @@ const Course = () => {
 
                 <div
                   className={`position-relative${
-                    preview ? " d-block" : " d-none"
+                    category.cover || preview ? " d-block" : " d-none"
                   }`}
                 >
                   <img
-                    src={preview}
+                    src={category.cover ? category.cover : preview}
                     className="w-100"
                     alt="course category cover preview"
                   />
                   <button
                     className="btn btn-link pl-0"
                     type="button"
-                    onClick={() => setPreview(null)}
+                    disabled={disabled}
+                    onClick={() => {
+                      if (category._id) {
+                        disable(true);
+                        console.log();
+                        var filename = category.cover.split("/").pop();
+                        axios
+                          .get("/api/course/category_remove_image/" + filename)
+                          .then((result) => {
+                            if (result.status) {
+                              get(state._id);
+                            }
+                            disable(false);
+                          });
+                      } else {
+                        setPreview(null);
+                        previewInput.current.value = null;
+                      }
+                    }}
                   >
                     remove image
                   </button>
@@ -248,6 +290,7 @@ const Course = () => {
                     rows="3"
                     name="description"
                     placeholder="Description"
+                    defaultValue={category.description}
                     required
                     onChange={(e) =>
                       setcategory({

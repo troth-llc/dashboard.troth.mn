@@ -3,9 +3,7 @@ const { validationResult } = require("express-validator");
 const { bucket } = require("../middleware/upload");
 const crypto = require("crypto");
 exports.index = (req, res) => {
-  Category.find().then((result) => {
-    return res.json({ status: true, result });
-  });
+  Category.find().then((result) => res.json({ result }));
 };
 exports.create_category = (req, res) => {
   const errors = validationResult(req);
@@ -37,8 +35,19 @@ exports.create_category = (req, res) => {
         else return res.json({ status: true });
       });
     });
-
     blobStream.end(req.file.buffer);
   }
 };
-exports.find_category = (req, res) => {};
+exports.find_category = (req, res) => {
+  const { id } = req.params;
+  Category.findById(id).then((result) => res.json({ result }));
+};
+exports.remove_category_image = (req, res) => {
+  const { filename } = req.params;
+  const remove = bucket.file("img/" + filename);
+  remove.delete().then((data) => {
+    console.log(data);
+    // add error handlers
+  });
+};
+// add remove course category function
