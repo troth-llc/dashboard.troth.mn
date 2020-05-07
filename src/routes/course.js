@@ -4,6 +4,7 @@ const course = require("../controllers/course");
 // middleware
 const token = require("../middleware/token");
 const validate = require("../middleware/validator");
+const { multer } = require("../middleware/upload");
 /**
  * /api/course:
  *   post:
@@ -15,6 +16,7 @@ router.get("/", token, course.index);
 router.post(
   "/create_category",
   token,
+  multer.single("file"),
   validate.create_category,
   course.create_category
 );
