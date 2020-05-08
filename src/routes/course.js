@@ -21,6 +21,13 @@ router.post(
   validate.create_category,
   course.create_category
 );
+router.post(
+  "/edit_category",
+  token,
+  multer.single("file"),
+  validate.create_category,
+  course.edit_category
+);
 router.get("/category/:id", token, course.find_category);
 router.get(
   "/category_remove_image/:filename",

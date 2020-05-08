@@ -89,6 +89,7 @@ const Course = () => {
                                 <CardImg
                                   top
                                   width="100%"
+                                  height="100"
                                   src={state.cover}
                                   alt={state.name}
                                 />
@@ -136,6 +137,11 @@ const Course = () => {
                             </Col>
                           );
                         })}
+                        {!state.length ? (
+                          <p className="text-center p-2 w-100 mb-0">
+                            No category found
+                          </p>
+                        ) : null}
                       </Row>
                     ) : (
                       <div className="text-center">
@@ -159,9 +165,12 @@ const Course = () => {
             upload.append("file", current.files[0]);
             upload.append("name", category.name);
             upload.append("description", category.description);
+            if (category._id) upload.append("id", category._id);
             axios({
               method: "post",
-              url: "/api/course/create_category",
+              url: `/api/course/${
+                category._id ? "edit_category" : "create_category"
+              }`,
               headers: {
                 "Content-Type": "multipart/form-data",
               },
@@ -175,7 +184,9 @@ const Course = () => {
           }}
         >
           <div className="modal-header">
-            <h5 className="modal-title">Create category</h5>
+            <h5 className="modal-title">
+              {category._id ? "Edit" : "Create"} category
+            </h5>
           </div>
           <ModalBody>
             {error ? (
@@ -219,7 +230,7 @@ const Course = () => {
                     type="file"
                     name="file"
                     ref={previewInput}
-                    required
+                    required={category.cover ? false : true}
                     className="form-control-file"
                     accept="image/x-png,image/gif,image/jpeg"
                     onChange={(e) => {
@@ -262,13 +273,12 @@ const Course = () => {
                     onClick={() => {
                       if (category._id) {
                         disable(true);
-                        console.log();
                         var filename = category.cover.split("/").pop();
                         axios
                           .get("/api/course/category_remove_image/" + filename)
                           .then((result) => {
                             if (result.status) {
-                              get(state._id);
+                              setcategory({ ...category, cover: null });
                             }
                             disable(false);
                           });

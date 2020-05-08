@@ -16,5 +16,5 @@ app.listen(PORT, () => {
     .then(() => console.log("MongoDB Connected..."))
     .catch((err) => console.log(err));
   mongoose.set("useCreateIndex", true);
-  console.log(`server running on the port: ${PORT}`);
+  console.log(`server running on the port: ${PORT} - ${new Date()}`);
 });
