@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 // reactstrap components
 import {
   Card,
@@ -14,7 +14,6 @@ import {
   DropdownItem,
   Spinner,
   Button,
-  Label,
 } from "reactstrap";
 import {
   Modal,
@@ -35,18 +34,22 @@ import axios from "axios";
 import moment from "moment";
 // core components
 import Header from "components/Headers/Header.js";
-const Course = (props) => {
+const Course = () => {
   const url = new URL(window.location);
-  var params = new URLSearchParams(url.search);
+  const params = new URLSearchParams(url.search);
   const [state, setState] = useState(null);
-  const [disabled, setDisabled] = useState(false);
+  const [disabled, disable] = useState(false);
   const [modal, setModal] = useState(false);
   const [error, setError] = useState(null);
   const [search, setSearch] = useState("");
-  const [save, setSave] = useState(null);
+  const [course, setCourse] = useState({});
+
+  const previewInput = useRef(null);
+  const [preview, setPreview] = useState(null);
+  const [errorCover, setErrorCover] = useState(null);
+  const [category, setCategory] = useState(null);
   const toggle = () => setModal(!modal);
   const get = ({ ...args }) => {
-    console.log(args);
     if (args.category) {
       setState(null);
       axios
@@ -59,9 +62,16 @@ const Course = (props) => {
       axios.get("/api/course").then((res) => setState(res.data.result));
     }
   };
+  const get_category = () => {
+    axios
+      .get("/api/course/category")
+      .then((res) => setCategory(res.data.result));
+  };
   useEffect(() => {
+    get_category();
     params.has("category") ? get({ category: params.get("category") }) : get();
   }, []);
+  useEffect(() => {}, [modal, course.cover]);
   return (
     <>
       <Header />
@@ -91,7 +101,10 @@ const Course = (props) => {
                     color="info"
                     type="button"
                     className="mr-3"
-                    onClick={() => setModal(true)}
+                    onClick={() => {
+                      setCourse({});
+                      setModal(true);
+                    }}
                   >
                     Add Course
                   </Button>
@@ -238,21 +251,33 @@ const Course = (props) => {
         <form
           onSubmit={(e) => {
             e.preventDefault();
-            setDisabled(true);
-            axios
-              .post("/api/crouse/create", {
-                ...save,
-              })
-              .then((res) => {
-                res.data.status
-                  ? window.location.reload()
-                  : setError(res.data.errors);
-                setDisabled(false);
-              });
+            disable(true);
+            const { current } = previewInput;
+            const upload = new FormData();
+            upload.append("file", current.files[0]);
+            upload.append("name", course.name);
+            upload.append("description", course.description);
+            !course.category
+              ? upload.append("category", category[0]._id)
+              : upload.append("category", course.category);
+            if (course._id) upload.append("id", course._id);
+            axios({
+              method: "post",
+              url: `/api/course/${course._id ? "edit" : "create"}`,
+              headers: {
+                "Content-Type": "multipart/form-data",
+              },
+              data: upload,
+            }).then((res) => {
+              res.data.status
+                ? window.location.reload()
+                : setError(res.data.errors);
+              disable(false);
+            });
           }}
         >
           <div className="modal-header">
-            <h5 className="modal-title">Create user account</h5>
+            <h5 className="modal-title">Create Course</h5>
           </div>
           <ModalBody>
             {error ? (
@@ -267,7 +292,148 @@ const Course = (props) => {
               </Alert>
             ) : null}
             <div>
-              <Row></Row>
+              <Row>
+                <Col lg="12">
+                  <FormGroup>
+                    <label className="form-control-label">Name</label>
+                    <Input
+                      className="form-control-alternative"
+                      defaultValue={course.name}
+                      autoFocus={true}
+                      placeholder="Name"
+                      name="name"
+                      type="text"
+                      required
+                      onChange={(e) =>
+                        setCourse({
+                          ...course,
+                          [e.target.name]: e.target.value,
+                        })
+                      }
+                    />
+                  </FormGroup>
+                </Col>
+                <Col lg="12">
+                  <FormGroup
+                    className={course.cover || preview ? "d-none" : "d-block"}
+                  >
+                    <label className="form-control-label">Cover image</label>
+                    <input
+                      type="file"
+                      name="file"
+                      ref={previewInput}
+                      required={course.cover ? false : true}
+                      className="form-control-file"
+                      accept="image/x-png,image/gif,image/jpeg"
+                      onChange={(e) => {
+                        setErrorCover(null);
+                        var file = e.target.files[0];
+                        var ext = file.name
+                          .substring(file.name.lastIndexOf(".") + 1)
+                          .toLowerCase();
+                        if (
+                          file &&
+                          (ext === "png" || ext === "jpeg" || ext === "jpg")
+                        ) {
+                          var reader = new FileReader();
+                          reader.onload = function (e) {
+                            setPreview(e.target.result);
+                          };
+                          reader.readAsDataURL(file);
+                        } else {
+                          setErrorCover("invalid image");
+                        }
+                      }}
+                    />
+                    <span className="text-red mt-2">{errorCover}</span>
+                  </FormGroup>
+                  <div
+                    className={`position-relative${
+                      course.cover || preview ? " d-block" : " d-none"
+                    }`}
+                  >
+                    <img
+                      src={course.cover ? course.cover : preview}
+                      className="w-100"
+                      alt="course cover preview"
+                    />
+                    <button
+                      className="btn btn-link pl-0"
+                      type="button"
+                      disabled={disabled}
+                      onClick={() => {
+                        if (course._id && course.cover) {
+                          disable(true);
+                          var filename = course.cover.split("/").pop();
+                          axios
+                            .get("/api/course/course_remove_image/" + filename)
+                            .then((result) => {
+                              if (result.status) {
+                                setCourse({ ...course, cover: null });
+                              }
+                              disable(false);
+                            });
+                        } else {
+                          setPreview(null);
+                          previewInput.current.value = null;
+                        }
+                      }}
+                    >
+                      remove image
+                    </button>
+                  </div>
+                </Col>
+                <Col lg="12">
+                  <FormGroup>
+                    <label className="form-control-label">Description</label>
+                    <textarea
+                      className="form-control"
+                      rows="3"
+                      name="description"
+                      placeholder="Description"
+                      defaultValue={course.description}
+                      required
+                      onChange={(e) =>
+                        setCourse({
+                          ...course,
+                          [e.target.name]: e.target.value,
+                        })
+                      }
+                    ></textarea>
+                  </FormGroup>
+                  <FormGroup>
+                    <label
+                      className="form-control-label"
+                      htmlFor="category-select"
+                    >
+                      Category
+                    </label>
+                    <Input
+                      type="select"
+                      name="category"
+                      id="category-select"
+                      onChange={(e) =>
+                        setCourse({
+                          ...course,
+                          [e.target.name]: e.target.value,
+                        })
+                      }
+                    >
+                      {category ? (
+                        category.map((c) => {
+                          return (
+                            <option key={c._id} value={c._id}>
+                              {c.name}
+                            </option>
+                          );
+                        })
+                      ) : (
+                        <option>loading...</option>
+                      )}
+                    </Input>
+                  </FormGroup>
+                </Col>
+              </Row>
             </div>
           </ModalBody>
           <ModalFooter>

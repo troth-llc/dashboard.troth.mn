@@ -67,7 +67,6 @@ const Category = () => {
                 <h3 className="mb-0" style={{ lineHeight: "50px" }}>
                   Capstone Course Categories
                 </h3>
-
                 <Button
                   color="info"
                   className="mr-3"
@@ -88,12 +87,14 @@ const Category = () => {
                           return (
                             <Col sm={6} lg={3} md={6} xl={3} key={state._id}>
                               <Card className="course-card">
-                                <CardImg
-                                  top
-                                  width="100%"
-                                  src={state.cover}
-                                  alt={state.name}
-                                />
+                                {state.cover ? (
+                                  <CardImg
+                                    top
+                                    width="100%"
+                                    src={state.cover}
+                                    alt={state.name}
+                                  />
+                                ) : null}
                                 <UncontrolledDropdown>
                                   <DropdownToggle
                                     className="btn-icon-only"
@@ -272,7 +273,7 @@ const Category = () => {
                     type="button"
                     disabled={disabled}
                     onClick={() => {
-                      if (category._id) {
+                      if (category._id && category.cover) {
                         disable(true);
                         var filename = category.cover.split("/").pop();
                         axios

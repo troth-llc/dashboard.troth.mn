@@ -26,7 +26,7 @@ exports.create_category = (req, res) => {
     });
     blobStream.on("finish", () => {
       // The public URL can be used to directly access the file via HTTP.
-      const cover = `https://storage.googleapis.com/${bucket.name}/${blob.name}`;
+      const cover = `http://cdn.troth.mn/${blob.name}`;
       const { name, description } = req.body;
       const category = new Category({ name, description, cover });
       category.save((err) => {
@@ -44,8 +44,15 @@ exports.find_category = (req, res) => {
 exports.remove_category_image = (req, res) => {
   const { filename } = req.params;
   const remove = bucket.file("img/" + filename);
-  remove.delete().then((data) => {
-    return res.json({ status: true });
+  remove.delete().then(() => {
+    Category.findOne({
+      cover: { $regex: filename, $options: "i" },
+    }).then((doc) => {
+      doc.cover = null;
+      doc.save(() => {
+        return res.json({ status: true });
+      });
+    });
   });
 };
 exports.edit_category = (req, res) => {
@@ -62,7 +69,7 @@ exports.edit_category = (req, res) => {
       console.log(err);
     });
     blobStream.on("finish", () => {
-      const cover = `https://storage.googleapis.com/${bucket.name}/${blob.name}`;
+      const cover = `http://cdn.troth.mn/${blob.name}`;
       const { name, description } = req.body;
       Category.findById(id).then((category) => {
         category.name = name;
@@ -91,7 +98,8 @@ exports.index = (req, res) => {
   return res.json({ result: [] });
 };
 exports.course_category = (req, res) => {
-  const { id } = req.params;
-  console.log(id);
-  return res.json({ result: [] });
+  return res.json({});
+};
+exports.create = (req, res) => {
+  return res.json({ status: true });
 };

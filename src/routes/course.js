@@ -14,7 +14,8 @@ const { multer } = require("../middleware/upload");
  */
 //course
 router.get("/", course.index);
-router.get("/category/:id", course.course_category);
+router.get("/course_category/:id", course.course_category);
+router.post("/create", token, multer.single("file"), course.create);
 // category
 router.get("/category", course.category);
 router.post(
