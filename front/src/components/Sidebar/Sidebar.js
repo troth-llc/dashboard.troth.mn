@@ -200,9 +200,15 @@ class Sidebar extends React.Component {
             {/* Navigation */}
             <Nav className="mb-md-3" navbar>
               <NavItem>
+                <NavLinkRRD to="/admin/capstone/category" className="nav-link">
+                  <i className="ni ni-collection" />
+                  Category
+                </NavLinkRRD>
+              </NavItem>
+              <NavItem>
                 <NavLinkRRD to="/admin/capstone/course" className="nav-link">
                   <i className="ni ni-book-bookmark" />
-                  Courses
+                  Course
                 </NavLinkRRD>
               </NavItem>
               <NavItem>

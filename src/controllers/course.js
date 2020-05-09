@@ -6,7 +6,8 @@ const hash = crypto
   .createHash("sha1")
   .update(Math.random().toString() + new Date().valueOf().toString())
   .digest("hex");
-exports.index = (req, res) => {
+// category
+exports.category = (req, res) => {
   Category.find().then((result) => res.json({ result }));
 };
 exports.create_category = (req, res) => {
@@ -84,4 +85,13 @@ exports.edit_category = (req, res) => {
       });
     });
   }
+};
+// course
+exports.index = (req, res) => {
+  return res.json({ result: [] });
+};
+exports.course_category = (req, res) => {
+  const { id } = req.params;
+  console.log(id);
+  return res.json({ result: [] });
 };

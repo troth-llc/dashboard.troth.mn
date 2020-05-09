@@ -12,8 +12,11 @@ const { multer } = require("../middleware/upload");
  *     responses:
  *       200:
  */
+//course
+router.get("/", course.index);
+router.get("/category/:id", course.course_category);
 // category
-router.get("/", token, course.index);
+router.get("/category", course.category);
 router.post(
   "/create_category",
   token,
@@ -28,7 +31,7 @@ router.post(
   validate.create_category,
   course.edit_category
 );
-router.get("/category/:id", token, course.find_category);
+router.get("/find_category/:id", token, course.find_category);
 router.get(
   "/category_remove_image/:filename",
   token,

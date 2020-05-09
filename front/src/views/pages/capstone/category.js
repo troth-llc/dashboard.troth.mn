@@ -32,7 +32,7 @@ import axios from "axios";
 // core components
 import Header from "components/Headers/Header.js";
 import "./style.scss";
-const Course = () => {
+const Category = () => {
   const [state, setState] = useState(null);
   const [modal, openmodal] = useState(false);
   const [category, setcategory] = useState({});
@@ -44,9 +44,11 @@ const Course = () => {
   const get = (id) => {
     id
       ? axios
-          .get("/api/course/category/" + id)
+          .get("/api/course/find_category/" + id)
           .then((res) => setcategory(res.data.result))
-      : axios.get("/api/course").then((res) => setState(res.data.result));
+      : axios
+          .get("/api/course/category")
+          .then((res) => setState(res.data.result));
   };
   useEffect(() => {
     get();
@@ -89,7 +91,6 @@ const Course = () => {
                                 <CardImg
                                   top
                                   width="100%"
-                                  height="100"
                                   src={state.cover}
                                   alt={state.name}
                                 />
@@ -122,7 +123,7 @@ const Course = () => {
                                 </UncontrolledDropdown>
                                 <CardBody>
                                   <Link
-                                    to={`/admin/capstome/course/category/${state._id}`}
+                                    to={`/admin/capstone/course?category=${state._id}`}
                                   >
                                     <CardSubtitle>{state.name}</CardSubtitle>
                                     <CardText>{state.description}</CardText>
@@ -330,4 +331,4 @@ const Course = () => {
     </>
   );
 };
-export default Course;
+export default Category;

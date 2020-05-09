@@ -8,7 +8,8 @@ import User from "views/pages/users/find.js";
 import Verify from "views/pages/document";
 import Document from "views/pages/document/find";
 // capstone
-import Course from "views/pages/capstone/course";
+import Category from "views/pages/capstone/category";
+import Course from "views/pages/capstone/index";
 var routes = [
   {
     path: "/index",
@@ -72,6 +73,14 @@ var routes = [
     hidden: true,
   },
   // capstone
+  {
+    path: "/capstone/category",
+    name: "Category",
+    icon: "ni ni-bullet-list-67 text-red",
+    component: Category,
+    layout: "/admin",
+    hidden: true,
+  },
   {
     path: "/capstone/course",
     name: "Course",
