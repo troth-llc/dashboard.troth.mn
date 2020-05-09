@@ -93,10 +93,13 @@ const Course = () => {
                   onSubmit={(e) => {
                     e.preventDefault();
                     if (search.trim()) {
-                      setState(null);
-                      axios
-                        .post("/api/course/search", { search: search.trim() })
-                        .then((res) => setState(res.data.result));
+                      e.preventDefault();
+                      if (search.trim()) {
+                        setState(null);
+                        axios
+                          .post("/api/course/search", { search: search.trim() })
+                          .then((res) => setState(res.data.result));
+                      }
                     }
                   }}
                 >
@@ -158,106 +161,121 @@ const Course = () => {
                 <Row>
                   <Col className="table-data">
                     {state ? (
-                      <Table
-                        className="align-items-center table-flush"
-                        responsive
-                        hover
-                      >
-                        <thead className="thead-light">
-                          <tr>
-                            <th scope="col">Name</th>
-                            <th scope="col">Description</th>
-                            <th scope="col">Category</th>
-                            <th scope="col">Episode</th>
-                            <th scope="col">Submissions</th>
-                            <th scope="col">Created</th>
-                            <th scope="col" />
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {state.map((state) => {
-                            return (
-                              <tr key={state._id}>
-                                <th scope="row">
-                                  <span className="mb-0 text-sm">
-                                    <Link to={`/admin/user/${state._id}`}>
-                                      {state.name}
-                                    </Link>
-                                  </span>
-                                </th>
-                                <th scope="row">
-                                  {state.description.substring(0, 50)}
-                                </th>
-                                <th scope="row">
-                                  <span>{state.category.name}</span>
-                                </th>
-                                <th scope="row">{state.episode.length}</th>
-                                <th scope="row">0</th>
-                                <th scope="row">
-                                  <span>{moment(state.created).fromNow()}</span>
-                                </th>
-                                <td className="text-right">
-                                  <UncontrolledDropdown>
-                                    <DropdownToggle
-                                      className="btn-icon-only text-light"
-                                      href="#pablo"
-                                      role="button"
-                                      size="sm"
-                                      color=""
-                                      onClick={(e) => e.preventDefault()}
-                                    >
-                                      <i className="fas fa-ellipsis-v" />
-                                    </DropdownToggle>
-                                    <DropdownMenu
-                                      className="dropdown-menu-arrow"
-                                      right
-                                    >
-                                      <Link
-                                        to={`/admin/capstone/course/${state._id}`}
-                                        className="dropdown-item"
-                                      >
-                                        View
-                                      </Link>
-                                      <DropdownItem
-                                        onClick={() => {
-                                          setError(null);
-                                          get({ id: state._id });
-                                          toggle();
-                                        }}
-                                      >
-                                        Edit
-                                      </DropdownItem>
-                                      {state.episode.length === 0 ? (
-                                        <DropdownItem
-                                          href="#pablo"
-                                          onClick={(e) => {
-                                            e.preventDefault();
-                                            axios
-                                              .get(
-                                                "/api/course/remove/" +
-                                                  state._id
-                                              )
-                                              .then((res) =>
-                                                res.data.status
-                                                  ? get()
-                                                  : alert(
-                                                      "something went wrong"
-                                                    )
-                                              );
-                                          }}
-                                          style={{ color: "red" }}
-                                        >
-                                          Remove
-                                        </DropdownItem>
-                                      ) : null}
-                                    </DropdownMenu>
-                                  </UncontrolledDropdown>
-                                </td>
+                      <>
+                        <div
+                          className={`table-responsive ${
+                            !state.length ? "d-none" : "block"
+                          }`}
+                        >
+                          <table
+                            className={
+                              "align-items-center table-flush table table-hover"
+                            }
+                          >
+                            <thead className="thead-light">
+                              <tr>
+                                <th scope="col">Name</th>
+                                <th scope="col">Description</th>
+                                <th scope="col">Category</th>
+                                <th scope="col">Episode</th>
+                                <th scope="col">Submissions</th>
+                                <th scope="col">Created</th>
+                                <th scope="col" />
                               </tr>
-                            );
-                          })}
-                        </tbody>
-                      </Table>
+                            </thead>
+                            <tbody>
+                              {state.map((state) => {
+                                return (
+                                  <tr key={state._id}>
+                                    <th scope="row">
+                                      <span className="mb-0 text-sm">
+                                        <Link to={`/admin/user/${state._id}`}>
+                                          {state.name}
+                                        </Link>
+                                      </span>
+                                    </th>
+                                    <th scope="row">
+                                      {state.description.substring(0, 50)}
+                                    </th>
+                                    <th scope="row">
+                                      <span>{state.category.name}</span>
+                                    </th>
+                                    <th scope="row">{state.episode.length}</th>
+                                    <th scope="row">0</th>
+                                    <th scope="row">
+                                      <span>
+                                        {moment(state.created).fromNow()}
+                                      </span>
+                                    </th>
+                                    <td className="text-right">
+                                      <UncontrolledDropdown>
+                                        <DropdownToggle
+                                          className="btn-icon-only text-light"
+                                          href="#pablo"
+                                          role="button"
+                                          size="sm"
+                                          color=""
+                                          onClick={(e) => e.preventDefault()}
+                                        >
+                                          <i className="fas fa-ellipsis-v" />
+                                        </DropdownToggle>
+                                        <DropdownMenu
+                                          className="dropdown-menu-arrow"
+                                          right
+                                        >
+                                          <Link
+                                            to={`/admin/capstone/course/${state._id}`}
+                                            className="dropdown-item"
+                                          >
+                                            View
+                                          </Link>
+                                          <DropdownItem
+                                            onClick={() => {
+                                              setError(null);
+                                              get({ id: state._id });
+                                              toggle();
+                                            }}
+                                          >
+                                            Edit
+                                          </DropdownItem>
+                                          {state.episode.length === 0 ? (
+                                            <DropdownItem
+                                              href="#pablo"
+                                              onClick={(e) => {
+                                                e.preventDefault();
+                                                axios
+                                                  .get(
+                                                    "/api/course/remove/" +
+                                                      state._id
+                                                  )
+                                                  .then((res) =>
+                                                    res.data.status
+                                                      ? get()
+                                                      : alert(
+                                                          "something went wrong"
+                                                        )
+                                                  );
+                                              }}
+                                              style={{ color: "red" }}
+                                            >
+                                              Remove
+                                            </DropdownItem>
+                                          ) : null}
+                                        </DropdownMenu>
+                                      </UncontrolledDropdown>
+                                    </td>
+                                  </tr>
+                                );
+                              })}
+                            </tbody>
+                          </table>
+                        </div>
+                        {!state.length ? (
+                          <p className="text-center p-2 w-100 mb-0">
+                            No Course found
+                          </p>
+                        ) : null}
+                      </>
                     ) : (
                       <div className="text-center">
                         <Spinner animation="border" variant="secondary" />
@@ -300,7 +318,9 @@ const Course = () => {
           }}
         >
           <div className="modal-header">
-            <h5 className="modal-title">Create Course</h5>
+            <h5 className="modal-title">
+              {course._id ? "Edit" : "Create"} Course
+            </h5>
           </div>
           <ModalBody>
             {error ? (
@@ -410,19 +430,21 @@ const Course = () => {
                   <FormGroup>
                     <label className="form-control-label">Description</label>
                     <textarea
-                      className="form-control"
-                      rows="3"
+                      className="form-control-alternative form-control"
+                      type="textarea"
                       name="description"
                       placeholder="Description"
                       defaultValue={course.description}
                       required
+                      rows="8"
+                      maxLength="10000"
                       onChange={(e) =>
                         setCourse({
                           ...course,
                           [e.target.name]: e.target.value,
                         })
                       }
-                    ></textarea>
+                    />
                   </FormGroup>
                   <FormGroup>
                     <label

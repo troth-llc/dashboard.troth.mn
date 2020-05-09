@@ -25,6 +25,7 @@ router.post(
   validate.create_course,
   course.create
 );
+router.post("/search", token, course.search);
 router.post(
   "/update",
   token,

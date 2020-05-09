@@ -211,12 +211,6 @@ class Sidebar extends React.Component {
                   Course
                 </NavLinkRRD>
               </NavItem>
-              <NavItem>
-                <NavLinkRRD to="/admin/capstone/teacher" className="nav-link">
-                  <i className="ni ni-hat-3" />
-                  Teachers
-                </NavLinkRRD>
-              </NavItem>
             </Nav>
           </Collapse>
         </Container>

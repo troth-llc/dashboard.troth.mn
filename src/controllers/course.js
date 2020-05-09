@@ -215,3 +215,13 @@ exports.remove = (req, res) => {
     else return res.json({ status: false });
   });
 };
+exports.search = (req, res) => {
+  let search = new RegExp(req.body.search, "i");
+  Course.find({
+    $or: [{ name: search }, { description: search }],
+  })
+    .populate("category", "name")
+    .exec((err, result) => {
+      res.json({ status: true, result });
+    });
+};
