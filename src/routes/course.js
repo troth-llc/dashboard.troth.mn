@@ -14,10 +14,27 @@ const { multer } = require("../middleware/upload");
  */
 //course
 router.get("/", course.index);
+router.get("/find/:id", token, course.find);
+router.get("/remove/:id", token, course.remove);
+router.get("/course_remove_image/:filename", token, course.course_remove_image);
 router.get("/course_category/:id", course.course_category);
-router.post("/create", token, multer.single("file"), course.create);
+router.post(
+  "/create",
+  token,
+  multer.single("file"),
+  validate.create_course,
+  course.create
+);
+router.post(
+  "/update",
+  token,
+  multer.single("file"),
+  validate.create_course,
+  course.update
+);
 // category
 router.get("/category", course.category);
+router.get("/category_remove/:id", token, course.category_remove);
 router.post(
   "/create_category",
   token,

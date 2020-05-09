@@ -53,10 +53,13 @@ const Course = () => {
     if (args.category) {
       setState(null);
       axios
-        .get("/api/course/category/" + args.category)
+        .get("/api/course/course_category/" + args.category)
         .then((res) => setState(res.data.result));
     } else if (args.id) {
-      console.log("editings course");
+      setCourse({});
+      axios
+        .get("/api/course/find/" + args.id)
+        .then((res) => setCourse(res.data.result));
     } else {
       setState(null);
       axios.get("/api/course").then((res) => setState(res.data.result));
@@ -97,6 +100,15 @@ const Course = () => {
                     }
                   }}
                 >
+                  {params.has("category") ? (
+                    <Link
+                      to="/admin/capstone/course"
+                      className="mr-3"
+                      onClick={get}
+                    >
+                      Show all
+                    </Link>
+                  ) : null}
                   <Button
                     color="info"
                     type="button"
@@ -163,7 +175,7 @@ const Course = () => {
                           </tr>
                         </thead>
                         <tbody>
-                          {state.map((user) => {
+                          {state.map((state) => {
                             return (
                               <tr key={state._id}>
                                 <th scope="row">
@@ -173,13 +185,14 @@ const Course = () => {
                                     </Link>
                                   </span>
                                 </th>
-                                <th scope="row">@{user.username}</th>
-                                <th scope="row">{state.description}</th>
                                 <th scope="row">
-                                  <span>{state.category}</span>
+                                  {state.description.substring(0, 50)}
                                 </th>
-                                <th scope="row">{state.episode}</th>
-                                <th scope="row">{state.submission}</th>
+                                <th scope="row">
+                                  <span>{state.category.name}</span>
+                                </th>
+                                <th scope="row">{state.episode.length}</th>
+                                <th scope="row">0</th>
                                 <th scope="row">
                                   <span>{moment(state.created).fromNow()}</span>
                                 </th>
@@ -200,7 +213,7 @@ const Course = () => {
                                       right
                                     >
                                       <Link
-                                        to={`/admin/user/${state._id}`}
+                                        to={`/admin/capstone/course/${state._id}`}
                                         className="dropdown-item"
                                       >
                                         View
@@ -208,25 +221,35 @@ const Course = () => {
                                       <DropdownItem
                                         onClick={() => {
                                           setError(null);
+                                          get({ id: state._id });
                                           toggle();
-                                          axios
-                                            .post("/api/users/find", {
-                                              id: state._id,
-                                            })
-                                            .then((res) =>
-                                              setState(res.data.course)
-                                            );
                                         }}
                                       >
                                         Edit
                                       </DropdownItem>
-                                      <DropdownItem
-                                        href="#pablo"
-                                        onClick={(e) => e.preventDefault()}
-                                        style={{ color: "red" }}
-                                      >
-                                        Remove
-                                      </DropdownItem>
+                                      {state.episode.length === 0 ? (
+                                        <DropdownItem
+                                          href="#pablo"
+                                          onClick={(e) => {
+                                            e.preventDefault();
+                                            axios
+                                              .get(
+                                                "/api/course/remove/" +
+                                                  state._id
+                                              )
+                                              .then((res) =>
+                                                res.data.status
+                                                  ? get()
+                                                  : alert(
+                                                      "something went wrong"
+                                                    )
+                                              );
+                                          }}
+                                          style={{ color: "red" }}
+                                        >
+                                          Remove
+                                        </DropdownItem>
+                                      ) : null}
                                     </DropdownMenu>
                                   </UncontrolledDropdown>
                                 </td>
@@ -263,7 +286,7 @@ const Course = () => {
             if (course._id) upload.append("id", course._id);
             axios({
               method: "post",
-              url: `/api/course/${course._id ? "edit" : "create"}`,
+              url: `/api/course/${course._id ? "update" : "create"}`,
               headers: {
                 "Content-Type": "multipart/form-data",
               },
@@ -412,6 +435,8 @@ const Course = () => {
                       type="select"
                       name="category"
                       id="category-select"
+                      value={course.category}
+                      required
                       onChange={(e) =>
                         setCourse({
                           ...course,

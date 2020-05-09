@@ -53,7 +53,7 @@ const Category = () => {
   useEffect(() => {
     get();
   }, []);
-  useEffect(() => {}, [modal, category.cover]);
+  useEffect(() => {}, [modal, category.cover, state]);
   return (
     <>
       <Header />
@@ -120,6 +120,28 @@ const Category = () => {
                                     >
                                       Edit
                                     </a>
+                                    {state.count === 0 ? (
+                                      <a
+                                        href="#delete"
+                                        className="dropdown-item"
+                                        style={{ color: "red" }}
+                                        onClick={(e) => {
+                                          e.preventDefault();
+                                          axios
+                                            .get(
+                                              "/api/course/category_remove/" +
+                                                state._id
+                                            )
+                                            .then((result) =>
+                                              result.data.status
+                                                ? get()
+                                                : alert("some thing went wrong")
+                                            );
+                                        }}
+                                      >
+                                        Remove
+                                      </a>
+                                    ) : null}
                                   </DropdownMenu>
                                 </UncontrolledDropdown>
                                 <CardBody>
@@ -127,10 +149,12 @@ const Category = () => {
                                     to={`/admin/capstone/course?category=${state._id}`}
                                   >
                                     <CardSubtitle>{state.name}</CardSubtitle>
-                                    <CardText>{state.description}</CardText>
+                                    <CardText className="desc-overflow">
+                                      {state.description}
+                                    </CardText>
                                     <p className="mb-0">
                                       <Badge color="primary">
-                                        {state.course} Courses
+                                        {state.count} Courses
                                       </Badge>
                                     </p>
                                   </Link>

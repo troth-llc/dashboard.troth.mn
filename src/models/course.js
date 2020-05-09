@@ -15,8 +15,8 @@ const courseSchema = new Schema({
     default: null,
   },
   category: {
-    type: Schema.ObjectId,
-    ref: "Category",
+    type: Schema.Types.ObjectId,
+    ref: "category",
     required: true,
   },
   teacher: {

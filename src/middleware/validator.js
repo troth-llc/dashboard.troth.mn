@@ -78,3 +78,16 @@ exports.create_category = [
     })
     .withMessage("Must be between 2 and 512 in length"),
 ];
+exports.create_course = [
+  check("name")
+    .isLength({
+      min: 2,
+      max: 72,
+    })
+    .withMessage("Must be between 2 and 72 in length"),
+  check("description")
+    .isLength({
+      min: 2,
+    })
+    .withMessage("Must be between 2 and 512 in length"),
+];
