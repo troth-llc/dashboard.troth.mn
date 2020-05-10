@@ -7,10 +7,6 @@ import {
   Container,
   Row,
   Col,
-  UncontrolledDropdown,
-  DropdownToggle,
-  DropdownMenu,
-  DropdownItem,
   Spinner,
   Button,
 } from "reactstrap";
@@ -28,7 +24,6 @@ import {
   UncontrolledTooltip,
 } from "reactstrap";
 // UwU
-import { Link } from "react-router-dom";
 import axios from "axios";
 import moment from "moment";
 // core components
@@ -165,6 +160,12 @@ const Episode = (props) => {
                                     style={{ cursor: "pointer" }}
                                     onClick={() => {
                                       setError(null);
+                                      setEpisode({});
+                                      axios
+                                        .get("/api/episode/find/" + state._id)
+                                        .then((res) =>
+                                          setEpisode(res.data.result)
+                                        );
                                       toggle();
                                     }}
                                   >
@@ -218,10 +219,10 @@ const Episode = (props) => {
             upload.append("file", current.files[0]);
             upload.append("name", episode.name);
             upload.append("description", episode.description);
-            upload.append("link", episode.link);
+            upload.append("link", episode.link ? episode.link : episode.video);
             upload.append("free", episode.free ? episode.free : false);
             upload.append("id", props.match.params.id);
-            if (episode._id) upload.append("id", episode._id);
+            if (episode._id) upload.append("episode_id", episode._id);
             axios({
               method: "post",
               url: `/api/episode/${episode._id ? "update" : "create"}`,
@@ -283,7 +284,7 @@ const Episode = (props) => {
                     </label>
                     <Input
                       className="form-control-alternative"
-                      defaultValue={episode.url}
+                      defaultValue={episode.video}
                       autoFocus={true}
                       placeholder="Link"
                       name="link"
@@ -351,7 +352,7 @@ const Episode = (props) => {
                           disable(true);
                           var filename = episode.cover.split("/").pop();
                           axios
-                            .get("/api/course/course_remove_image/" + filename)
+                            .get("/api/episode/remove_poster/" + filename)
                             .then((result) => {
                               if (result.status) {
                                 setEpisode({ ...episode, cover: null });
@@ -397,7 +398,7 @@ const Episode = (props) => {
                       id="free-episode"
                       name="free"
                       defaultChecked={episode.free}
-                      onChange={(e) =>
+                      onClick={(e) =>
                         setEpisode({
                           ...episode,
                           [e.target.name]: e.target.checked,
@@ -416,6 +417,29 @@ const Episode = (props) => {
             </div>
           </ModalBody>
           <ModalFooter>
+            {episode._id ? (
+              <Button
+                color="danger"
+                type="button"
+                disabled={disabled}
+                style={{ position: "absolute", left: "1.5rem" }}
+                onClick={() => {
+                  disable(true);
+                  axios
+                    .post("/api/episode/remove", {
+                      episode_id: episode._id,
+                      course_id: props.match.params.id,
+                    })
+                    .then((res) =>
+                      res.data.status
+                        ? window.location.reload()
+                        : alert("some thing went wrong")
+                    );
+                }}
+              >
+                Remove
+              </Button>
+            ) : null}
             <Button color="primary" type="submit" disabled={disabled}>
               Save
             </Button>

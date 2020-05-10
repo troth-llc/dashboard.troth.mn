@@ -25,3 +25,9 @@
   white-space: nowrap;
   text-overflow: ellipsis;
 }
+.first-row {
+  background-color: rgba(17, 127, 239, 0.1) !important;
+  &:hover {
+    background-color: rgba(17, 127, 239, 0.2) !important;
+  }
+}
