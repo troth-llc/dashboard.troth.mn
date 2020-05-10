@@ -33,47 +33,29 @@ import axios from "axios";
 import moment from "moment";
 // core components
 import Header from "components/Headers/Header.js";
-const Course = () => {
-  const url = new URL(window.location);
-  const params = new URLSearchParams(url.search);
+const Episode = (props) => {
   const [state, setState] = useState(null);
   const [disabled, disable] = useState(false);
   const [modal, setModal] = useState(false);
   const [error, setError] = useState(null);
   const [search, setSearch] = useState("");
-  const [course, setCourse] = useState({});
-
+  const [episode, setEpisode] = useState({});
   const previewInput = useRef(null);
   const [preview, setPreview] = useState(null);
   const [errorCover, setErrorCover] = useState(null);
-  const [category, setCategory] = useState(null);
   const toggle = () => setModal(!modal);
-  const get = ({ ...args }) => {
-    if (args.category) {
-      setState(null);
-      axios
-        .get("/api/course/course_category/" + args.category)
-        .then((res) => setState(res.data.result));
-    } else if (args.id) {
-      setCourse({});
-      axios
-        .get("/api/course/find/" + args.id)
-        .then((res) => setCourse(res.data.result));
-    } else {
-      setState(null);
-      axios.get("/api/course").then((res) => setState(res.data.result));
-    }
-  };
-  const get_category = () => {
-    axios
-      .get("/api/course/category")
-      .then((res) => setCategory(res.data.result));
+  const get = (id) => {
+    setState(null);
+    axios.get("/api/episode/" + id).then((res) => {
+      res.data.status
+        ? setState(res.data.result)
+        : (window.location.href = "/admin/capstone/course");
+    });
   };
   useEffect(() => {
-    get_category();
-    params.has("category") ? get({ category: params.get("category") }) : get();
+    get(props.match.params.id);
   }, []);
-  useEffect(() => {}, [modal, course.cover]);
+  useEffect(() => {}, [modal, episode.cover]);
   return (
     <>
       <Header />
@@ -85,7 +67,7 @@ const Course = () => {
             <Card className="shadow">
               <CardHeader className="bg-transparent d-flex">
                 <h3 className="mb-0" style={{ lineHeight: "50px" }}>
-                  Courses
+                  Episodes
                 </h3>
                 <Form
                   className="navbar-search navbar-search-dark form-inline mr-3 d-none d-md-flex ml-lg-auto"
@@ -96,31 +78,24 @@ const Course = () => {
                       if (search.trim()) {
                         setState(null);
                         axios
-                          .post("/api/course/search", { search: search.trim() })
+                          .post("/api/episode/search", {
+                            search: search.trim(),
+                          })
                           .then((res) => setState(res.data.result));
                       }
                     }
                   }}
                 >
-                  {params.has("category") ? (
-                    <Link
-                      to="/admin/capstone/course"
-                      className="mr-3"
-                      onClick={get}
-                    >
-                      Show all
-                    </Link>
-                  ) : null}
                   <Button
                     color="info"
                     type="button"
                     className="mr-3"
                     onClick={() => {
-                      setCourse({});
+                      setEpisode({});
                       setModal(true);
                     }}
                   >
-                    Add Course
+                    Add Episode
                   </Button>
                   <FormGroup className="mb-0">
                     <InputGroup className="input-group-alternative">
@@ -173,98 +148,42 @@ const Course = () => {
                           >
                             <thead className="thead-light">
                               <tr>
-                                <th scope="col">Name</th>
+                                <th scope="col">#</th>
+                                <th scope="col">Title</th>
                                 <th scope="col">Description</th>
-                                <th scope="col">Category</th>
-                                <th scope="col">Episode</th>
-                                <th scope="col">Submissions</th>
+                                <th scope="col">Free</th>
+                                <th scope="col">Updated</th>
                                 <th scope="col">Created</th>
-                                <th scope="col" />
                               </tr>
                             </thead>
                             <tbody>
-                              {state.map((state) => {
+                              {state.map((state, index) => {
                                 return (
-                                  <tr key={state._id}>
-                                    <th scope="row">
-                                      <span className="mb-0 text-sm">
-                                        <Link
-                                          to={`/admin/capstone/episode/${state._id}`}
-                                        >
-                                          {state.name}
-                                        </Link>
-                                      </span>
-                                    </th>
+                                  <tr
+                                    key={state._id}
+                                    className={index === 0 ? "first-row" : null}
+                                    style={{ cursor: "pointer" }}
+                                    onClick={() => {
+                                      setError(null);
+                                      toggle();
+                                    }}
+                                  >
+                                    <th scope="row">{index + 1}</th>
+                                    <th scope="row">{state.name}</th>
                                     <th scope="row">
                                       {state.description.substring(0, 50)}
                                     </th>
                                     <th scope="row">
-                                      <span>{state.category.name}</span>
+                                      <span>{state.free ? "Yes" : "No"}</span>
                                     </th>
-                                    <th scope="row">{state.episode.length}</th>
-                                    <th scope="row">0</th>
+                                    <th scope="row">
+                                      {moment(state.updated).fromNow()}
+                                    </th>
                                     <th scope="row">
                                       <span>
                                         {moment(state.created).fromNow()}
                                       </span>
                                     </th>
-                                    <td className="text-right">
-                                      <UncontrolledDropdown>
-                                        <DropdownToggle
-                                          className="btn-icon-only text-light"
-                                          href="#pablo"
-                                          role="button"
-                                          size="sm"
-                                          color=""
-                                          onClick={(e) => e.preventDefault()}
-                                        >
-                                          <i className="fas fa-ellipsis-v" />
-                                        </DropdownToggle>
-                                        <DropdownMenu
-                                          className="dropdown-menu-arrow"
-                                          right
-                                        >
-                                          <Link
-                                            to={`/admin/capstone/episode/${state._id}`}
-                                            className="dropdown-item"
-                                          >
-                                            View
-                                          </Link>
-                                          <DropdownItem
-                                            onClick={() => {
-                                              setError(null);
-                                              get({ id: state._id });
-                                              toggle();
-                                            }}
-                                          >
-                                            Edit
-                                          </DropdownItem>
-                                          {state.episode.length === 0 ? (
-                                            <DropdownItem
-                                              href="#pablo"
-                                              onClick={(e) => {
-                                                e.preventDefault();
-                                                axios
-                                                  .get(
-                                                    "/api/course/remove/" +
-                                                      state._id
-                                                  )
-                                                  .then((res) =>
-                                                    res.data.status
-                                                      ? get()
-                                                      : alert(
-                                                          "something went wrong"
-                                                        )
-                                                  );
-                                              }}
-                                              style={{ color: "red" }}
-                                            >
-                                              Remove
-                                            </DropdownItem>
-                                          ) : null}
-                                        </DropdownMenu>
-                                      </UncontrolledDropdown>
-                                    </td>
                                   </tr>
                                 );
                               })}
@@ -273,7 +192,7 @@ const Course = () => {
                         </div>
                         {!state.length ? (
                           <p className="text-center p-2 w-100 mb-0">
-                            No Course found
+                            No Episode found
                           </p>
                         ) : null}
                       </>
@@ -297,15 +216,15 @@ const Course = () => {
             const { current } = previewInput;
             const upload = new FormData();
             upload.append("file", current.files[0]);
-            upload.append("name", course.name);
-            upload.append("description", course.description);
-            !course.category
-              ? upload.append("category", category[0]._id)
-              : upload.append("category", course.category);
-            if (course._id) upload.append("id", course._id);
+            upload.append("name", episode.name);
+            upload.append("description", episode.description);
+            upload.append("link", episode.link);
+            upload.append("free", episode.free ? episode.free : false);
+            upload.append("id", props.match.params.id);
+            if (episode._id) upload.append("id", episode._id);
             axios({
               method: "post",
-              url: `/api/course/${course._id ? "update" : "create"}`,
+              url: `/api/episode/${episode._id ? "update" : "create"}`,
               headers: {
                 "Content-Type": "multipart/form-data",
               },
@@ -320,7 +239,7 @@ const Course = () => {
         >
           <div className="modal-header">
             <h5 className="modal-title">
-              {course._id ? "Edit" : "Create"} Course
+              {episode._id ? "Edit" : "Create"} Episode
             </h5>
           </div>
           <ModalBody>
@@ -339,18 +258,40 @@ const Course = () => {
               <Row>
                 <Col lg="12">
                   <FormGroup>
-                    <label className="form-control-label">Name</label>
+                    <label className="form-control-label">Title</label>
                     <Input
                       className="form-control-alternative"
-                      defaultValue={course.name}
+                      defaultValue={episode.name}
                       autoFocus={true}
                       placeholder="Name"
                       name="name"
                       type="text"
                       required
                       onChange={(e) =>
-                        setCourse({
-                          ...course,
+                        setEpisode({
+                          ...episode,
+                          [e.target.name]: e.target.value,
+                        })
+                      }
+                    />
+                  </FormGroup>
+                </Col>
+                <Col lg="12">
+                  <FormGroup>
+                    <label className="form-control-label">
+                      Video Link (Youtube, Vimeo)
+                    </label>
+                    <Input
+                      className="form-control-alternative"
+                      defaultValue={episode.url}
+                      autoFocus={true}
+                      placeholder="Link"
+                      name="link"
+                      type="url"
+                      required
+                      onChange={(e) =>
+                        setEpisode({
+                          ...episode,
                           [e.target.name]: e.target.value,
                         })
                       }
@@ -359,14 +300,14 @@ const Course = () => {
                 </Col>
                 <Col lg="12">
                   <FormGroup
-                    className={course.cover || preview ? "d-none" : "d-block"}
+                    className={episode.cover || preview ? "d-none" : "d-block"}
                   >
-                    <label className="form-control-label">Cover image</label>
+                    <label className="form-control-label">Poster image</label>
                     <input
                       type="file"
                       name="file"
                       ref={previewInput}
-                      required={course.cover ? false : true}
+                      required={episode.cover ? false : true}
                       className="form-control-file"
                       accept="image/x-png,image/gif,image/jpeg"
                       onChange={(e) => {
@@ -393,27 +334,27 @@ const Course = () => {
                   </FormGroup>
                   <div
                     className={`position-relative${
-                      course.cover || preview ? " d-block" : " d-none"
+                      episode.cover || preview ? " d-block" : " d-none"
                     }`}
                   >
                     <img
-                      src={course.cover ? course.cover : preview}
+                      src={episode.cover ? episode.cover : preview}
                       className="w-100"
-                      alt="course cover preview"
+                      alt="episode cover preview"
                     />
                     <button
                       className="btn btn-link pl-0"
                       type="button"
                       disabled={disabled}
                       onClick={() => {
-                        if (course._id && course.cover) {
+                        if (episode._id && episode.cover) {
                           disable(true);
-                          var filename = course.cover.split("/").pop();
+                          var filename = episode.cover.split("/").pop();
                           axios
                             .get("/api/course/course_remove_image/" + filename)
                             .then((result) => {
                               if (result.status) {
-                                setCourse({ ...course, cover: null });
+                                setEpisode({ ...episode, cover: null });
                               }
                               disable(false);
                             });
@@ -435,51 +376,41 @@ const Course = () => {
                       type="textarea"
                       name="description"
                       placeholder="Description"
-                      defaultValue={course.description}
+                      defaultValue={episode.description}
                       required
                       rows="8"
                       maxLength="10000"
                       onChange={(e) =>
-                        setCourse({
-                          ...course,
+                        setEpisode({
+                          ...episode,
                           [e.target.name]: e.target.value,
                         })
                       }
                     />
                   </FormGroup>
-                  <FormGroup>
-                    <label
-                      className="form-control-label"
-                      htmlFor="category-select"
-                    >
-                      Category
-                    </label>
-                    <Input
-                      type="select"
-                      name="category"
-                      id="category-select"
-                      value={course.category}
-                      required
+                </Col>
+                <Col lg="12">
+                  <div className="custom-control custom-checkbox">
+                    <input
+                      type="checkbox"
+                      className="custom-control-input"
+                      id="free-episode"
+                      name="free"
+                      defaultChecked={episode.free}
                       onChange={(e) =>
-                        setCourse({
-                          ...course,
-                          [e.target.name]: e.target.value,
+                        setEpisode({
+                          ...episode,
+                          [e.target.name]: e.target.checked,
                         })
                       }
+                    />
+                    <label
+                      className="custom-control-label"
+                      htmlFor="free-episode"
                     >
-                      {category ? (
-                        category.map((c) => {
-                          return (
-                            <option key={c._id} value={c._id}>
-                              {c.name}
-                            </option>
-                          );
-                        })
-                      ) : (
-                        <option>loading...</option>
-                      )}
-                    </Input>
-                  </FormGroup>
+                      Free episode
+                    </label>
+                  </div>
                 </Col>
               </Row>
             </div>
@@ -501,4 +432,4 @@ const Course = () => {
     </>
   );
 };
-export default Course;
+export default Episode;

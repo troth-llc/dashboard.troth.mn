@@ -10,6 +10,7 @@ import Document from "views/pages/document/find";
 // capstone
 import Category from "views/pages/capstone/category";
 import Course from "views/pages/capstone/index";
+import Episode from "views/pages/capstone/episode";
 var routes = [
   {
     path: "/index",
@@ -86,6 +87,14 @@ var routes = [
     name: "Course",
     icon: "ni ni-bullet-list-67 text-red",
     component: Course,
+    layout: "/admin",
+    hidden: true,
+  },
+  {
+    path: "/capstone/episode/:id",
+    name: "Course",
+    icon: "ni ni-bullet-list-67 text-red",
+    component: Episode,
     layout: "/admin",
     hidden: true,
   },

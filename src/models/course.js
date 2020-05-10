@@ -25,10 +25,8 @@ const courseSchema = new Schema({
   },
   episode: [
     {
-      episode: {
-        type: Schema.ObjectId,
-        ref: "Episode",
-      },
+      type: Schema.Types.ObjectId,
+      ref: "episode",
     },
   ],
   updated: {

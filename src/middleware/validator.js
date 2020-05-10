@@ -91,3 +91,26 @@ exports.create_course = [
     })
     .withMessage("Must be between 2 and 512 in length"),
 ];
+exports.create_episode = [
+  check("name")
+    .isLength({
+      min: 2,
+      max: 72,
+    })
+    .withMessage("Must be between 2 and 72 in length"),
+  check("description")
+    .isLength({
+      min: 2,
+    })
+    .withMessage("Must be between 2 and 512 in length"),
+  check("link")
+    .isLength({
+      min: 14,
+    })
+    .withMessage("Must be between 14 and 128 in length"),
+  check("id")
+    .isLength({
+      min: 8,
+    })
+    .withMessage("ID must included"),
+];

@@ -14,6 +14,10 @@ const episodeSchema = new Schema({
     type: String,
     default: null,
   },
+  free: {
+    type: Boolean,
+    default: false,
+  },
   video: {
     type: String,
     default: null,
