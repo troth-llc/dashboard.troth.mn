@@ -38,6 +38,7 @@ const Episode = (props) => {
   const previewInput = useRef(null);
   const [preview, setPreview] = useState(null);
   const [errorCover, setErrorCover] = useState(null);
+  const [videoType, setVideoType] = useState(null);
   const toggle = () => setModal(!modal);
   const get = (id) => {
     setState(null);
@@ -278,25 +279,104 @@ const Episode = (props) => {
                   </FormGroup>
                 </Col>
                 <Col lg="12">
-                  <FormGroup>
+                  <FormGroup
+                    className={videoType === false ? "has-danger" : null}
+                  >
                     <label className="form-control-label">
-                      Video Link (Youtube, Vimeo)
+                      Video Link (Youtube, Vimeo){" "}
+                      <UncontrolledTooltip
+                        placement="top"
+                        target="episode-help"
+                      >
+                        Youtube : https://www.youtube.com/watch?v=**********{" "}
+                        <br />
+                        Vimeo : https://vimeo.com/*******
+                      </UncontrolledTooltip>
+                      <i
+                        className="fa fa-question ml-3"
+                        style={{ fontSize: "13px" }}
+                        id="episode-help"
+                      ></i>
                     </label>
-                    <Input
-                      className="form-control-alternative"
+                    <input
+                      className={`form-control-alternative form-control ${
+                        videoType === false ? "is-invalid" : null
+                      }`}
                       defaultValue={episode.video}
                       autoFocus={true}
                       placeholder="Link"
+                      autoComplete="off"
                       name="link"
                       type="url"
                       required
-                      onChange={(e) =>
-                        setEpisode({
-                          ...episode,
-                          [e.target.name]: e.target.value,
-                        })
-                      }
+                      onChange={(e) => {
+                        setVideoType(false);
+                        function isYoutube(url) {
+                          if (url.length > 10) {
+                            url = url.split(
+                              /(vi\/|v=|\/v\/|youtu\.be\/|\/embed\/)/
+                            );
+                            return url[2] !== undefined
+                              ? url[2].split(/[^0-9a-z_\-]/i)[0]
+                              : false;
+                          } else {
+                            setVideoType(false);
+                            disable(true);
+                          }
+                        }
+                        function isVimeo(url) {
+                          if (url.length > 10) {
+                            var regExp = /^.*(vimeo\.com\/)((channels\/[A-z]+\/)|(groups\/[A-z]+\/videos\/))?([0-9]+)/;
+                            var match = url.match(regExp);
+                            return match ? match[5] : false;
+                          } else {
+                            setVideoType(false);
+                            disable(true);
+                          }
+                        }
+                        if (isVimeo(e.target.value)) {
+                          disable(false);
+                          setEpisode({
+                            ...episode,
+                            [e.target
+                              .name]: `https://player.vimeo/video/${isVimeo(
+                              e.target.value
+                            )}`,
+                          });
+                          setVideoType("Vimeo detected");
+                        } else if (isYoutube(e.target.value)) {
+                          disable(false);
+                          setEpisode({
+                            ...episode,
+                            [e.target
+                              .name]: `https://www.youtube.com/embed/${isYoutube(
+                              e.target.value
+                            )}`,
+                          });
+                          setVideoType("Youtube detected");
+                        } else {
+                          setVideoType(false);
+                          disable(true);
+                        }
+                      }}
                     />
+                    <p
+                      className="text-success mt-2 mb-0"
+                      style={{ fontSize: "13px" }}
+                    >
+                      {videoType ? (
+                        <>
+                          {videoType}
+                          <a
+                            href={episode.link}
+                            target="_blank"
+                            className="ml-2"
+                          >
+                            Play video
+                          </a>
+                        </>
+                      ) : null}
+                    </p>
                   </FormGroup>
                 </Col>
                 <Col lg="12">

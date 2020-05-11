@@ -31,3 +31,10 @@
     background-color: rgba(17, 127, 239, 0.2) !important;
   }
 }
+.has-danger:after {
+  background: unset !important;
+  content: "" !important;
+}
+.has-danger label.form-control-label {
+  color: #fb6340 !important;
+}
