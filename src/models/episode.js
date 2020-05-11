@@ -36,5 +36,5 @@ const episodeSchema = new Schema({
     default: new Date(),
   },
 });
-const episode = mongoose.model("eposide", episodeSchema);
+const episode = mongoose.model("episode", episodeSchema);
 module.exports = episode;

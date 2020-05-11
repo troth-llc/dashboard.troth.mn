@@ -114,6 +114,7 @@ exports.remove_poster = (req, res) => {
     Episode.findOne({
       cover: { $regex: filename, $options: "i" },
     }).then((doc) => {
+      console.log(doc);
       doc.cover = null;
       doc.save(() => {
         return res.json({ status: true });
