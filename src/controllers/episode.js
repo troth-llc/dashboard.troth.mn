@@ -3,10 +3,12 @@ const Course = require("../models/course");
 const { validationResult } = require("express-validator");
 const { bucket } = require("../middleware/upload");
 const crypto = require("crypto");
-const hash = crypto
-  .createHash("sha1")
-  .update(Math.random().toString() + new Date().valueOf().toString())
-  .digest("hex");
+const hash = () => {
+  return crypto
+    .createHash("sha1")
+    .update(Math.random().toString() + new Date().valueOf().toString())
+    .digest("hex");
+};
 exports.index = (req, res) => {
   const { id } = req.params;
   Course.findById(id)
@@ -30,7 +32,10 @@ exports.create = (req, res) => {
     return res.json({ status: false, msg: "No file uploaded." });
   else {
     const blob = bucket.file(
-      "img/" + hash + "." + req.file.originalname.split(".").pop()
+      "img/" +
+        hash() +
+        "." +
+        req.file.originalname.split(".").pop().toLowerCase()
     );
     const blobStream = blob.createWriteStream();
     blobStream.on("error", (err) => {
@@ -71,7 +76,10 @@ exports.update = (req, res) => {
   const { episode_id, name, description, link, free } = req.body;
   if (req.file) {
     const blob = bucket.file(
-      "img/" + hash + "." + req.file.originalname.split(".").pop()
+      "img/" +
+        hash() +
+        "." +
+        req.file.originalname.split(".").pop().toLowerCase()
     );
     const blobStream = blob.createWriteStream();
     blobStream.on("error", (err) => {

@@ -3,10 +3,12 @@ const Course = require("../models/course");
 const { validationResult } = require("express-validator");
 const { bucket } = require("../middleware/upload");
 const crypto = require("crypto");
-const hash = crypto
-  .createHash("sha1")
-  .update(Math.random().toString() + new Date().valueOf().toString())
-  .digest("hex");
+const hash = () => {
+  return crypto
+    .createHash("sha1")
+    .update(Math.random().toString() + new Date().valueOf().toString())
+    .digest("hex");
+};
 // category
 exports.category = (req, res) => {
   Category.find().then((result) => {
@@ -28,7 +30,10 @@ exports.create_category = (req, res) => {
     return res.json({ status: false, msg: "No file uploaded." });
   else {
     const blob = bucket.file(
-      "img/" + hash + "." + req.file.originalname.split(".").pop()
+      "img/" +
+        hash() +
+        "." +
+        req.file.originalname.split(".").pop().toLowerCase()
     );
     const blobStream = blob.createWriteStream();
     blobStream.on("error", (err) => {
@@ -79,7 +84,10 @@ exports.edit_category = (req, res) => {
   const { id, name, description } = req.body;
   if (req.file) {
     const blob = bucket.file(
-      "img/" + hash + "." + req.file.originalname.split(".").pop()
+      "img/" +
+        hash() +
+        "." +
+        req.file.originalname.split(".").pop().toLowerCase()
     );
     const blobStream = blob.createWriteStream();
     blobStream.on("error", (err) => {
@@ -150,7 +158,10 @@ exports.create = (req, res) => {
     return res.status(200).json({ errors: errors.array() });
   else {
     const blob = bucket.file(
-      "img/" + hash + "." + req.file.originalname.split(".").pop()
+      "img/" +
+        hash() +
+        "." +
+        req.file.originalname.split(".").pop().toLowerCase()
     );
     const blobStream = blob.createWriteStream();
     blobStream.on("error", (err) => {
@@ -176,7 +187,10 @@ exports.update = (req, res) => {
   const { id, name, description, category } = req.body;
   if (req.file) {
     const blob = bucket.file(
-      "img/" + hash + "." + req.file.originalname.split(".").pop()
+      "img/" +
+        hash() +
+        "." +
+        req.file.originalname.split(".").pop().toLowerCase()
     );
     const blobStream = blob.createWriteStream();
     blobStream.on("error", (err) => {
