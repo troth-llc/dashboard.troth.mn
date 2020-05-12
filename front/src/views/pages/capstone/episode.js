@@ -326,9 +326,10 @@ const Episode = (props) => {
                         }
                         function isVimeo(url) {
                           if (url.length > 10) {
-                            var regExp = /^.*(vimeo\.com\/)((channels\/[A-z]+\/)|(groups\/[A-z]+\/videos\/))?([0-9]+)/;
+                            var regExp = /^.*(vimeo\.com\/)((channels\/[A-z]+\/)|(groups\/[A-z]+\/videos\/))|((video+\/))?([0-9]+)/;
                             var match = url.match(regExp);
-                            return match ? match[5] : false;
+                            console.log(match);
+                            return match ? match[7] : false;
                           } else {
                             setVideoType(false);
                             disable(true);
@@ -339,7 +340,7 @@ const Episode = (props) => {
                           setEpisode({
                             ...episode,
                             [e.target
-                              .name]: `https://player.vimeo/video/${isVimeo(
+                              .name]: `https://player.vimeo.com/video/${isVimeo(
                               e.target.value
                             )}`,
                           });

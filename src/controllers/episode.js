@@ -3,10 +3,38 @@ const Course = require("../models/course");
 const { validationResult } = require("express-validator");
 const { bucket } = require("../middleware/upload");
 const { google } = require("googleapis");
-var moment = require("moment-timezone");
-var momentDurationFormatSetup = require("moment-duration-format");
+const crypto = require("crypto");
+const Vimeo = require("vimeo").Vimeo;
+const moment = require("moment-timezone");
+const momentDurationFormatSetup = require("moment-duration-format");
 momentDurationFormatSetup(moment);
-
+const client = new Vimeo(
+  process.env.VIMEO_ID,
+  process.env.VIMEO_SECRET,
+  process.env.VIMEO_TOKEN
+);
+const get_vimeo_duration = (id) => {
+  console.log(id);
+  return new Promise((resolve, reject) => {
+    client.request(
+      {
+        method: "GET",
+        path: "/videos/" + id,
+      },
+      (error, body, status_code, headers) => {
+        if (error) {
+          console.log(error);
+          resolve("00:00");
+        }
+        resolve(
+          moment
+            .utc(moment.duration(body.duration, "seconds").as("milliseconds"))
+            .format("mm:ss")
+        );
+      }
+    );
+  });
+};
 const get_youtube_duration = (id) => {
   return new Promise((resolve, reject) => {
     google.youtube("v3").videos.list(
@@ -17,7 +45,7 @@ const get_youtube_duration = (id) => {
       },
       (err, response) => {
         if (err) {
-          reject(Error("The API returned an error: " + err));
+          resolve("00:00");
         }
         const { items } = response.data;
         resolve(
@@ -30,22 +58,6 @@ const get_youtube_duration = (id) => {
     );
   });
 };
-const aget_youtube_duration = (id) => {
-  google.youtube("v3").videos.list(
-    {
-      auth: process.env.GOOGLE_APIS,
-      part: "contentDetails",
-      id,
-    },
-    (err, response) => {
-      const { items } = response.data;
-      return moment
-        .duration(items[0].contentDetails.duration)
-        .format("h:mm:ss")
-        .padStart(4, "0:0");
-    }
-  );
-};
 const isYoutube = (url) => {
   if (url.length > 10) {
     url = url.split(/(vi\/|v=|\/v\/|youtu\.be\/|\/embed\/)/);
@@ -57,21 +69,21 @@ const isYoutube = (url) => {
 };
 const isVimeo = (url) => {
   if (url.length > 10) {
-    var regExp = /^.*(vimeo\.com\/)((channels\/[A-z]+\/)|(groups\/[A-z]+\/videos\/))?([0-9]+)/;
+    var regExp = /^.*(vimeo\.com\/)((channels\/[A-z]+\/)|(groups\/[A-z]+\/videos\/))|((video+\/))?([0-9]+)/;
     var match = url.match(regExp);
-    return match ? match[5] : false;
+    return match ? match[7] : false;
   } else {
     setVideoType(false);
     disable(true);
   }
 };
-const crypto = require("crypto");
 const hash = () => {
   return crypto
     .createHash("sha1")
     .update(Math.random().toString() + new Date().valueOf().toString())
     .digest("hex");
 };
+
 exports.index = (req, res) => {
   const { id } = req.params;
   Course.findById(id)
@@ -110,7 +122,7 @@ exports.create = (req, res) => {
       const { name, description, link, free, id } = req.body;
       var duration = isYoutube(link)
         ? await get_youtube_duration(isYoutube(link))
-        : null;
+        : await get_vimeo_duration(isVimeo(link));
       const episode = new Episode({
         name,
         description,
@@ -159,11 +171,11 @@ exports.update = (req, res) => {
         episode.description = description;
         episode.cover = cover;
         episode.free = free;
-        episode.link = link;
+        episode.video = link;
         episode.updated = new Date();
         (episode.duration = isYoutube(link)
           ? await get_youtube_duration(isYoutube(link))
-          : null),
+          : await get_vimeo_duration(isVimeo(link))),
           episode.save((err) => {
             if (err) console.log(err);
             else return res.json({ status: true });
@@ -172,16 +184,15 @@ exports.update = (req, res) => {
     });
     blobStream.end(req.file.buffer);
   } else {
-    get_youtube_duration(isYoutube(link)).then((res) => {});
     Episode.findById(episode_id).then(async (episode) => {
       episode.name = name;
       episode.description = description;
       episode.free = free;
-      episode.link = link;
+      episode.video = link;
       episode.updated = new Date();
       (episode.duration = isYoutube(link)
         ? await get_youtube_duration(isYoutube(link))
-        : null),
+        : await get_vimeo_duration(isVimeo(link))),
         episode.save((err) => {
           if (err) console.log(err);
           else return res.json({ status: true });
