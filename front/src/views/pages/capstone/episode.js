@@ -312,12 +312,12 @@ const Episode = (props) => {
                       onChange={(e) => {
                         setVideoType(false);
                         function isYoutube(url) {
-                          if (url.length > 10) {
-                            url = url.split(
-                              /(vi\/|v=|\/v\/|youtu\.be\/|\/embed\/)/
+                          if (url.length > 8) {
+                            var match = url.match(
+                              /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=|\?v=)([^#\&\?]*).*/
                             );
-                            return url[2] !== undefined
-                              ? url[2].split(/[^0-9a-z_\-]/i)[0]
+                            return match && match[2].length == 11
+                              ? match[2]
                               : false;
                           } else {
                             setVideoType(false);
@@ -325,27 +325,17 @@ const Episode = (props) => {
                           }
                         }
                         function isVimeo(url) {
-                          if (url.length > 10) {
-                            var regExp = /^.*(vimeo\.com\/)((channels\/[A-z]+\/)|(groups\/[A-z]+\/videos\/))|((video+\/))?([0-9]+)/;
-                            var match = url.match(regExp);
-                            console.log(match);
+                          if (url.length > 8) {
+                            var match = url.match(
+                              /^.*(vimeo\.com\/)((channels\/[A-z]+\/)|(groups\/[A-z]+\/videos\/))|((video+\/))?([0-9]+)/
+                            );
                             return match ? match[7] : false;
                           } else {
                             setVideoType(false);
                             disable(true);
                           }
                         }
-                        if (isVimeo(e.target.value)) {
-                          disable(false);
-                          setEpisode({
-                            ...episode,
-                            [e.target
-                              .name]: `https://player.vimeo.com/video/${isVimeo(
-                              e.target.value
-                            )}`,
-                          });
-                          setVideoType("Vimeo detected");
-                        } else if (isYoutube(e.target.value)) {
+                        if (isYoutube(e.target.value)) {
                           disable(false);
                           setEpisode({
                             ...episode,
@@ -355,6 +345,16 @@ const Episode = (props) => {
                             )}`,
                           });
                           setVideoType("Youtube detected");
+                        } else if (isVimeo(e.target.value)) {
+                          disable(false);
+                          setEpisode({
+                            ...episode,
+                            [e.target
+                              .name]: `https://player.vimeo.com/video/${isVimeo(
+                              e.target.value
+                            )}`,
+                          });
+                          setVideoType("Vimeo detected");
                         } else {
                           setVideoType(false);
                           disable(true);
@@ -372,6 +372,7 @@ const Episode = (props) => {
                             href={episode.link}
                             target="_blank"
                             className="ml-2"
+                            rel="noopener noreferrer"
                           >
                             Play video
                           </a>

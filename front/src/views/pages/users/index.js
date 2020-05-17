@@ -357,7 +357,7 @@ const Users = () => {
                       ></textarea>
                     </FormGroup>
                   </Col>
-                  <Col lg="6">
+                  <Col lg="12">
                     <FormGroup>
                       <Label for="type">User type</Label>
                       <Input
@@ -370,28 +370,9 @@ const Users = () => {
                           setEdit({ ...edit, [e.target.name]: e.target.value })
                         }
                       >
-                        <option value="other"> - </option>
                         <option value="member">Member</option>
-                        <option value="other"> - </option>
-                      </Input>
-                    </FormGroup>
-                  </Col>
-                  <Col lg="6">
-                    <FormGroup>
-                      <Label for="gender">Gender</Label>
-                      <Input
-                        type="select"
-                        name="gender"
-                        id="gender"
-                        value={edit.gender}
-                        required
-                        onChange={(e) =>
-                          setEdit({ ...edit, [e.target.name]: e.target.value })
-                        }
-                      >
-                        <option value="male">Male</option>
-                        <option value="female">Female</option>
-                        <option value="custom">Custom</option>
+                        <option value="premium">Premium Member</option>
+                        <option value="partner">Partner</option>
                       </Input>
                     </FormGroup>
                   </Col>
@@ -542,7 +523,7 @@ const Users = () => {
                     ></textarea>
                   </FormGroup>
                 </Col>
-                <Col lg="6">
+                <Col lg="12">
                   <FormGroup>
                     <Label for="type">User type</Label>
                     <Input
@@ -555,29 +536,9 @@ const Users = () => {
                         setSave({ ...save, [e.target.name]: e.target.value })
                       }
                     >
-                      <option value="other"> - </option>
                       <option value="member">Member</option>
-                      <option value="other"> - </option>
-                    </Input>
-                  </FormGroup>
-                </Col>
-                <Col lg="6">
-                  <FormGroup>
-                    <Label for="gender">Gender</Label>
-                    <Input
-                      type="select"
-                      name="gender"
-                      id="gender"
-                      value={save.gender}
-                      required
-                      onChange={(e) => {
-                        console.log(e.target.value);
-                        setSave({ ...save, [e.target.name]: e.target.value });
-                      }}
-                    >
-                      <option value="male">Male</option>
-                      <option value="female">Female</option>
-                      <option value="custom">Custom</option>
+                      <option value="premium">Premium Member</option>
+                      <option value="partner">Partner</option>
                     </Input>
                   </FormGroup>
                 </Col>

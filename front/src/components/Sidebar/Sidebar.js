@@ -212,6 +212,18 @@ class Sidebar extends React.Component {
                 </NavLinkRRD>
               </NavItem>
             </Nav>
+            <hr className="my-3" />
+            {/* Heading */}
+            <h6 className="navbar-heading text-muted">Project</h6>
+            {/* Navigation */}
+            <Nav className="mb-md-3" navbar>
+              <NavItem>
+                <NavLinkRRD to="/admin/project" className="nav-link">
+                  <i className="ni ni-app" />
+                  Projects
+                </NavLinkRRD>
+              </NavItem>
+            </Nav>
           </Collapse>
         </Container>
       </Navbar>

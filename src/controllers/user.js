@@ -2,14 +2,38 @@ const User = require("../models/user");
 const { validationResult } = require("express-validator");
 const bcrypt = require("bcryptjs");
 const nodemailer = require("nodemailer");
-var transporter = nodemailer.createTransport({
-  service: "gmail",
-  auth: {
-    user: process.env.MAIL,
-    pass: process.env.MAIL_PASSWORD,
-    type: "login",
-  },
-});
+const key = require("../../config.json");
+// email config
+const send = async (to, subject, html) => {
+  return new Promise(async (resolve, reject) => {
+    var transporter = nodemailer.createTransport({
+      host: "smtp.gmail.com",
+      port: 465,
+      secure: true,
+      auth: {
+        type: "OAuth2",
+        user: process.env.MAIL,
+        serviceClient: key.client_id,
+        privateKey: key.private_key,
+      },
+    });
+    try {
+      await transporter.verify();
+      var result = await transporter.sendMail({
+        from: `TROTH LLC ${process.env.MAIL}`,
+        to,
+        subject,
+        html,
+      });
+      if (result.accepted.length > 0) {
+        resolve(true);
+      }
+    } catch (err) {
+      console.log(err);
+      resolve(false);
+    }
+  });
+};
 var createPassword = function () {
   var passAt = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
   var passArray = Array.from({ length: 8 });
@@ -140,23 +164,14 @@ exports.create = (req, res) => {
       data.updated = new Date();
       data.save((err) => {
         if (err) return res.json({ status: false, msg: err });
-        transporter.sendMail(
-          {
-            from: `Troth LLC ${process.env.MAIL}`,
-            to: email,
-            subject: "Welcome",
-            html: `<p>Hey <b>${name}</b>, <br/> Thanks for signing up. Your login information is below.</p>
-            <p>username: <b>${username}</b><br/>
-          password: <b>${password}</b></p>
-            `,
-          },
-          (err, info) => {
-            if (err) console.log(err);
-            return res.json({
-              status: info.accepted.length > 0 ? true : false,
-            });
-          }
-        );
+        send(
+          email,
+          "Welcome.",
+          `<p>Hey <b>${name}</b>, <br/> Thanks for signing up. Your login information is below.</p>
+        <p>username: <b>${username}</b><br/>
+      password: <b>${password}</b></p>
+        `
+        ).then((status) => res.json({ status }));
       });
     } else if (user.email.toLowerCase() == email.toLowerCase())
       return res.status(200).json({

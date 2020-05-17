@@ -59,23 +59,16 @@ const get_youtube_duration = (id) => {
   });
 };
 const isYoutube = (url) => {
-  if (url.length > 10) {
-    url = url.split(/(vi\/|v=|\/v\/|youtu\.be\/|\/embed\/)/);
-    return url[2] !== undefined ? url[2].split(/[^0-9a-z_\-]/i)[0] : false;
-  } else {
-    setVideoType(false);
-    disable(true);
-  }
+  var match = url.match(
+    /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=|\?v=)([^#\&\?]*).*/
+  );
+  return match && match[2].length == 11 ? match[2] : false;
 };
 const isVimeo = (url) => {
-  if (url.length > 10) {
-    var regExp = /^.*(vimeo\.com\/)((channels\/[A-z]+\/)|(groups\/[A-z]+\/videos\/))|((video+\/))?([0-9]+)/;
-    var match = url.match(regExp);
-    return match ? match[7] : false;
-  } else {
-    setVideoType(false);
-    disable(true);
-  }
+  var match = url.match(
+    /^.*(vimeo\.com\/)((channels\/[A-z]+\/)|(groups\/[A-z]+\/videos\/))|((video+\/))?([0-9]+)/
+  );
+  return match ? match[7] : false;
 };
 const hash = () => {
   return crypto
