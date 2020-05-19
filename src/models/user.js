@@ -23,10 +23,6 @@ const userSchema = new Schema({
     type: String,
     default: "",
   },
-  gender: {
-    type: String,
-    required: true,
-  },
   password: {
     type: String,
     required: true,
@@ -51,28 +47,16 @@ const userSchema = new Schema({
     type: Array,
     default: [],
   },
-  following: [
+  following: [{ type: Schema.Types.ObjectId, ref: "user" }],
+  followers: [{ type: Schema.Types.ObjectId, ref: "user" }],
+  projects: [{ type: Schema.Types.ObjectId, ref: "project" }],
+  submissions: [{ type: Schema.Types.ObjectId, ref: "submission" }],
+  notifications: [
     {
-      user: {
-        type: Schema.ObjectId,
-        ref: "User",
-      },
-      date: { type: Date, default: new Date() },
+      type: Schema.Types.ObjectId,
+      ref: "follow_notification",
     },
   ],
-  followers: [
-    {
-      user: {
-        type: Schema.ObjectId,
-        ref: "User",
-      },
-      date: { type: Date, default: new Date() },
-    },
-  ],
-  projects: {
-    type: Array,
-    default: [],
-  },
   created: {
     type: Date,
     default: new Date(),

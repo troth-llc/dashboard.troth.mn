@@ -11,6 +11,7 @@ import Document from "views/pages/document/find";
 import Category from "views/pages/capstone/category";
 import Course from "views/pages/capstone/index";
 import Episode from "views/pages/capstone/episode";
+import Submission from "views/pages/capstone/submission";
 var routes = [
   {
     path: "/index",
@@ -95,6 +96,14 @@ var routes = [
     name: "Course",
     icon: "ni ni-bullet-list-67 text-red",
     component: Episode,
+    layout: "/admin",
+    hidden: true,
+  },
+  {
+    path: "/capstone/submission",
+    name: "Course",
+    icon: "ni ni-bullet-list-67 text-red",
+    component: Submission,
     layout: "/admin",
     hidden: true,
   },

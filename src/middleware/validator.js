@@ -40,9 +40,6 @@ exports.update = [
     .isIn(usernames)
     .matches(/^(?!.*\.\.)(?!.*\.$)[^\W][\w.]{0,29}$/)
     .withMessage("Invalid username"),
-  check("gender")
-    .isIn(["male", "female", "custom"])
-    .withMessage("Invalid gender"),
   check("website").optional({ checkFalsy: true }).isLength({
     min: 10,
     max: 128,

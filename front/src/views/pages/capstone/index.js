@@ -177,7 +177,6 @@ const Course = () => {
                                 <th scope="col">Description</th>
                                 <th scope="col">Category</th>
                                 <th scope="col">Episode</th>
-                                <th scope="col">Submissions</th>
                                 <th scope="col">Created</th>
                                 <th scope="col" />
                               </tr>
@@ -202,7 +201,6 @@ const Course = () => {
                                       <span>{state.category.name}</span>
                                     </th>
                                     <th scope="row">{state.episode.length}</th>
-                                    <th scope="row">0</th>
                                     <th scope="row">
                                       <span>
                                         {moment(state.created).fromNow()}

@@ -14,7 +14,6 @@ const client = new Vimeo(
   process.env.VIMEO_TOKEN
 );
 const get_vimeo_duration = (id) => {
-  console.log(id);
   return new Promise((resolve, reject) => {
     client.request(
       {
@@ -65,9 +64,8 @@ const isYoutube = (url) => {
   return match && match[2].length == 11 ? match[2] : false;
 };
 const isVimeo = (url) => {
-  var match = url.match(
-    /^.*(vimeo\.com\/)((channels\/[A-z]+\/)|(groups\/[A-z]+\/videos\/))|((video+\/))?([0-9]+)/
-  );
+  var regExp = /^.*(vimeo\.com\/)((channels\/[A-z]+\/)|(groups\/[A-z]+\/videos\/))|((video+\/))?([0-9]+)/;
+  var match = url.match(regExp);
   return match ? match[7] : false;
 };
 const hash = () => {
