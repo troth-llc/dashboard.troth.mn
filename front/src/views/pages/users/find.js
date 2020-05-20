@@ -39,7 +39,7 @@ const User = (props) => {
                           <img
                             alt="..."
                             className="rounded-circle"
-                            src={require("assets/img/theme/team-4-800x800.jpg")}
+                            src={user.avatar}
                           />
                         </div>
                       ) : (

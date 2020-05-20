@@ -227,9 +227,15 @@ class Sidebar extends React.Component {
             {/* Navigation */}
             <Nav className="mb-md-3" navbar>
               <NavItem>
-                <NavLinkRRD to="/admin/project" className="nav-link">
+                <NavLinkRRD to="/admin/project" exact className="nav-link">
                   <i className="ni ni-app" />
                   Projects
+                </NavLinkRRD>
+              </NavItem>
+              <NavItem>
+                <NavLinkRRD to="/admin/project/category" className="nav-link">
+                  <i className="ni ni-tag" />
+                  Category
                 </NavLinkRRD>
               </NavItem>
             </Nav>
