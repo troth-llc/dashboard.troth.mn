@@ -12,7 +12,7 @@ const send = async (to, subject, html) => {
       secure: true,
       auth: {
         type: "OAuth2",
-        user: process.env.MAIL,
+        user: process.env.SENDER_MAIL,
         serviceClient: key.client_id,
         privateKey: key.private_key,
       },
@@ -20,7 +20,7 @@ const send = async (to, subject, html) => {
     try {
       await transporter.verify();
       var result = await transporter.sendMail({
-        from: `TROTH LLC ${process.env.MAIL}`,
+        from: `TROTH LLC ${process.env.SENDER_MAIL}`,
         to,
         subject,
         html,
