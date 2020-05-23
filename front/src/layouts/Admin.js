@@ -28,6 +28,7 @@ class Admin extends React.Component {
       })
       .catch((error) => {
         if (error) {
+          document.location.reload();
           localStorage.removeItem("dashboard");
         }
       });

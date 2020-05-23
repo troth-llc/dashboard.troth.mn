@@ -20,7 +20,12 @@ var data = [
       {
         name: "admin",
         email: "tuguldur@troth.mn",
-        password: "password",
+        password: "sdaminee",
+      },
+      {
+        name: "Munkhochir",
+        email: "munkhochir@troth.mn",
+        password: "Munkhochirb1",
       },
     ],
   },
