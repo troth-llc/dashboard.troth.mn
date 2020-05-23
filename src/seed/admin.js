@@ -1,6 +1,11 @@
 const seeder = require("mongoose-seed");
+require("dotenv").config();
 // Connect to MongoDB via Mongoose
-seeder.connect("string", () => {
+seeder.connect(process.env.MONGO, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+  useFindAndModify: false,
+}, () => {
   // Load Mongoose models
   seeder.loadModels(["src/models/admin.js"]);
   // Clear specified collections
