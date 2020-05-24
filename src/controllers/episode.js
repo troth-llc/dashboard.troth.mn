@@ -109,7 +109,7 @@ exports.create = (req, res) => {
     });
     blobStream.on("finish", async () => {
       // The public URL can be used to directly access the file via HTTP.
-      const cover = `http://cdn.troth.mn/${blob.name}`;
+      const cover = `https://cdn.troth.mn/${blob.name}`;
       const { name, description, link, free, id } = req.body;
       var duration = isYoutube(link)
         ? await get_youtube_duration(isYoutube(link))
@@ -156,7 +156,7 @@ exports.update = (req, res) => {
       console.log(err);
     });
     blobStream.on("finish", () => {
-      const cover = `http://cdn.troth.mn/${blob.name}`;
+      const cover = `https://cdn.troth.mn/${blob.name}`;
       Episode.findById(episode_id).then(async (episode) => {
         episode.name = name;
         episode.description = description;

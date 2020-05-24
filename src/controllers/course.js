@@ -41,7 +41,7 @@ exports.create_category = (req, res) => {
     });
     blobStream.on("finish", () => {
       // The public URL can be used to directly access the file via HTTP.
-      const cover = `http://cdn.troth.mn/${blob.name}`;
+      const cover = `https://cdn.troth.mn/${blob.name}`;
       const { name, description } = req.body;
       const category = new Category({ name, description, cover });
       category.save((err) => {
@@ -94,7 +94,7 @@ exports.edit_category = (req, res) => {
       console.log(err);
     });
     blobStream.on("finish", () => {
-      const cover = `http://cdn.troth.mn/${blob.name}`;
+      const cover = `https://cdn.troth.mn/${blob.name}`;
       const { name, description } = req.body;
       Category.findById(id).then((category) => {
         category.name = name;
@@ -169,7 +169,7 @@ exports.create = (req, res) => {
     });
     blobStream.on("finish", () => {
       // The public URL can be used to directly access the file via HTTP.
-      const cover = `http://cdn.troth.mn/${blob.name}`;
+      const cover = `https://cdn.troth.mn/${blob.name}`;
       const { name, description, category } = req.body;
       const course = new Course({ name, description, category, cover });
       course.save((err) => {
@@ -197,7 +197,7 @@ exports.update = (req, res) => {
       console.log(err);
     });
     blobStream.on("finish", () => {
-      const cover = `http://cdn.troth.mn/${blob.name}`;
+      const cover = `https://cdn.troth.mn/${blob.name}`;
       Course.findById(id).then((course) => {
         course.name = name;
         course.description = description;
