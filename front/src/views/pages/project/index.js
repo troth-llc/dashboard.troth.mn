@@ -178,7 +178,7 @@ const Projects = () => {
                         </div>
                       </div>
                       <div className="col owner-info">
-                        <Link to={project.owner.username}>
+                        <Link to={"/admin/user" + project.owner._id}>
                           {project.owner.name}
                         </Link>{" "}
                         created this project •
