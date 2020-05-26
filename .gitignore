@@ -3,3 +3,4 @@
 yarn.lock
 google-service.json
 config.json
+deploy.sh
