@@ -23,7 +23,7 @@ const ProjectCategory = () => {
   const toggle = () => setModal(!modal);
   const [disabled, disable] = useState(false);
   const [category, setCategory] = useState({});
-  const [error, setError] = useState({});
+  const [error, setError] = useState();
   useEffect(() => {
     const get = () => {
       axios
