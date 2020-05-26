@@ -45,18 +45,11 @@ exports.login = function (req, res) {
         return res.status(200).json({
           errors: [{ param: "password", msg: "Password does not match" }],
         });
-      jwt.sign(
-        { id: user.id },
-        process.env.JWTSECRET,
-        {
-          expiresIn: 36000, // 10 hours
-        },
-        (err, token) => {
-          if (err) throw err;
-          res.json({ status: true, token });
-          console.log("admin logged in " + email + " " + new Date());
-        }
-      );
+      jwt.sign({ id: user.id }, process.env.JWTSECRET, (err, token) => {
+        if (err) throw err;
+        res.json({ status: true, token });
+        console.log("admin logged in " + email + " " + new Date());
+      });
     });
   });
 };

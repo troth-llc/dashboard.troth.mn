@@ -14,6 +14,7 @@ import Episode from "views/pages/capstone/episode";
 import Submission from "views/pages/capstone/submission";
 // project
 import ProjectCategory from "views/pages/project/category";
+import Projects from "views/pages/project/index";
 var routes = [
   {
     path: "/index",
@@ -109,11 +110,20 @@ var routes = [
     layout: "/admin",
     hidden: true,
   },
+  // Project
   {
     path: "/project/category",
-    name: "Project",
+    name: "Project category",
     icon: "ni ni-bullet-list-67 text-red",
     component: ProjectCategory,
+    layout: "/admin",
+    hidden: true,
+  },
+  {
+    path: "/project",
+    name: "Project",
+    icon: "ni ni-bullet-list-67 text-red",
+    component: Projects,
     layout: "/admin",
     hidden: true,
   },
