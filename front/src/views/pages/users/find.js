@@ -9,6 +9,7 @@ import {
   Row,
   Col,
   Spinner,
+  Progress,
 } from "reactstrap";
 import axios from "axios";
 import moment from "moment";
@@ -17,10 +18,15 @@ import Header from "components/Headers/Header.js";
 
 const User = (props) => {
   const [user, setUser] = useState(null);
+  const [projects, setProjects] = useState(null);
   useEffect(() => {
-    axios
-      .post("/api/users/find", { id: props.match.params.id })
-      .then((res) => setUser(res.data.user));
+    axios.post("/api/users/find", { id: props.match.params.id }).then((res) => {
+      setUser(res.data.user);
+      if (res.data.user)
+        axios
+          .get("/api/project/get/" + res.data.user.id)
+          .then((res) => setProjects(res.data.result));
+    });
   }, [props.match.params.id]);
   return (
     <>
@@ -36,10 +42,9 @@ const User = (props) => {
                     <Col className="order-lg-2" lg="3">
                       {user.avatar ? (
                         <div className="card-profile-image">
-                          <img
-                            alt="..."
-                            className="rounded-circle"
-                            src={user.avatar}
+                          <div
+                            className="rounded-circle dash-avatar"
+                            style={{ backgroundImage: `url(${user.avatar})` }}
                           />
                         </div>
                       ) : (
@@ -65,7 +70,9 @@ const User = (props) => {
                             <span className="description">Followers</span>
                           </div>
                           <div>
-                            <span className="heading">{user.projects}</span>
+                            <span className="heading">
+                              {projects ? projects.length : "-"}
+                            </span>
                             <span className="description">Projects</span>
                           </div>
                         </div>
@@ -124,7 +131,57 @@ const User = (props) => {
                   </Col>
                 </Row>
               </CardHeader>
-              <CardBody></CardBody>
+              <CardBody>
+                {projects ? (
+                  projects.map((project) => {
+                    return (
+                      <div className="project-item-landscape" key={project._id}>
+                        <a
+                          className="flex-row d-flex"
+                          target="_blank"
+                          href={"https://troth.mn/project/view/" + project._id}
+                        >
+                          <div className="cover-container">
+                            <div
+                              className="project-photo"
+                              style={{
+                                backgroundImage: `url(${project.cover})`,
+                              }}
+                            />
+                          </div>
+                          <div className="project-detail">
+                            <div className="project-title">{project.title}</div>
+                            <div className="project-progress">
+                              <Progress
+                                value={Math.round(
+                                  (project.amount / project.funded) * 100
+                                )}
+                              />
+                            </div>
+                            <span className="progress-meter-heading">
+                              ₮{" "}
+                              {Number(
+                                project.funded.toFixed(1)
+                              ).toLocaleString()}{" "}
+                              <span className="text-stat text-stat-title">
+                                raised of ₮{" "}
+                                {Number(
+                                  project.amount.toFixed(1)
+                                ).toLocaleString()}{" "}
+                                goal
+                              </span>
+                            </span>
+                          </div>
+                        </a>
+                      </div>
+                    );
+                  })
+                ) : (
+                  <div className="w-100 text-center">
+                    <Spinner color="primary" />
+                  </div>
+                )}
+              </CardBody>
             </Card>
           </Col>
         </Row>

@@ -21,5 +21,6 @@ router.get("/category/remove/:id", token, project.category_remove);
 router.get("/", token, project.index);
 router.get("/:id", token, project.find);
 router.get("/approve/:id", token, project.approve);
+router.get("/get/:id", token, project.get);
 router.post("/reject", token, project.reject);
 module.exports = router;

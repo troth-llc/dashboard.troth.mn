@@ -140,10 +140,21 @@ const Projects = () => {
             <>
               <div className="project-container">
                 <div className="cover">
-                  <div
-                    className="project-cover"
-                    style={{ backgroundImage: `url(${project.cover})` }}
-                  />
+                  {project.video ? (
+                    <iframe
+                      src={project.video}
+                      frameBorder="0"
+                      allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+                      allowFullScreen
+                      title="youtube player"
+                      className="yt-iframe"
+                    />
+                  ) : (
+                    <div
+                      className="project-cover"
+                      style={{ backgroundImage: `url(${project.cover})` }}
+                    />
+                  )}
                 </div>
                 <h5 className="project-title mt-3">{project.title}</h5>
                 <div className="project-fund-details">
@@ -178,7 +189,7 @@ const Projects = () => {
                         </div>
                       </div>
                       <div className="col owner-info">
-                        <Link to={"/admin/user" + project.owner._id}>
+                        <Link to={"/admin/user/" + project.owner._id}>
                           {project.owner.name}
                         </Link>{" "}
                         created this project •

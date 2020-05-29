@@ -129,3 +129,9 @@ exports.reject = (req, res) => {
       }
     });
 };
+exports.get = (req, res) => {
+  const { id: owner } = req.params;
+  Project.find({ owner })
+    .then((result) => res.json({ result }))
+    .catch((err) => res.json({ status: false }));
+};

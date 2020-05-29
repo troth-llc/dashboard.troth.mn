@@ -69,8 +69,6 @@ exports.find = function (req, res) {
         website: user.website,
         following: user.following.length,
         followers: user.followers.length,
-        projects: user.projects.length,
-        gender: user.gender,
       },
     });
   });
