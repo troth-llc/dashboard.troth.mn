@@ -17,4 +17,6 @@ router.post("/create", validate.create_admin, token, admin.create);
 router.post("/update", validate.create_admin, token, admin.update);
 router.get("/remove/:id", token, admin.remove);
 router.post("/search", token, admin.search);
+router.post("/forgot", validate.email, admin.forgot);
+router.post("/reset", validate.reset_password, admin.reset_password);
 module.exports = router;

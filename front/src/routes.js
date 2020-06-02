@@ -17,6 +17,7 @@ import ProjectCategory from "views/pages/project/category";
 import Projects from "views/pages/project/index";
 // Admins
 import Admins from "views/pages/admin/index";
+import ResetPassword from "views/pages/Password";
 var routes = [
   {
     path: "/index",
@@ -143,6 +144,14 @@ var routes = [
     name: "Login",
     icon: "ni ni-key-25 text-info",
     component: Login,
+    layout: "/auth",
+    hidden: true,
+  },
+  {
+    path: "/password/:id",
+    name: "Login",
+    icon: "ni ni-key-25 text-info",
+    component: ResetPassword,
     layout: "/auth",
     hidden: true,
   },

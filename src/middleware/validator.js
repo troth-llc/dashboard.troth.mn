@@ -121,3 +121,24 @@ exports.create_admin = [
   check("email").isEmail(),
   check("weekday").not().isIn(["root", "admin"]),
 ];
+exports.email = [check("email").isEmail()];
+exports.reset_password = [
+  check("password")
+    .isLength({
+      min: 6,
+      max: 128,
+    })
+    .withMessage("Must be between 6 and 128 in length"),
+  check("confirm_password")
+    .isLength({
+      min: 6,
+      max: 128,
+    })
+    .withMessage("Must be between 6 and 128 in length"),
+  check("token")
+    .isLength({
+      min: 20,
+      max: 128,
+    })
+    .withMessage("invalid token"),
+];
