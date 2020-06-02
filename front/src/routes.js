@@ -15,6 +15,8 @@ import Submission from "views/pages/capstone/submission";
 // project
 import ProjectCategory from "views/pages/project/category";
 import Projects from "views/pages/project/index";
+// Admins
+import Admins from "views/pages/admin/index";
 var routes = [
   {
     path: "/index",
@@ -124,6 +126,15 @@ var routes = [
     name: "Project",
     icon: "ni ni-bullet-list-67 text-red",
     component: Projects,
+    layout: "/admin",
+    hidden: true,
+  },
+  // admin
+  {
+    path: "/admins",
+    name: "Admins",
+    icon: "ni ni-key-25 text-info",
+    component: Admins,
     layout: "/admin",
     hidden: true,
   },

@@ -1,5 +1,5 @@
 /*eslint-disable*/
-import React from "react";
+import React, { useContext } from "react";
 import { NavLink as NavLinkRRD, Link } from "react-router-dom";
 // nodejs library to set properties for components
 import { PropTypes } from "prop-types";
@@ -20,10 +20,35 @@ import {
   Container,
   Row,
   Col,
+  Spinner,
 } from "reactstrap";
-
 var ps;
-
+import { User } from "context/user";
+const Admin = () => {
+  const user = useContext(User);
+  return user ? (
+    user.type === "root" ? (
+      <>
+        <hr className="my-3" />
+        {/* Heading */}
+        <h6 className="navbar-heading text-muted">Staff</h6>
+        {/* Navigation */}
+        <Nav className="mb-md-3" navbar>
+          <NavItem>
+            <NavLinkRRD to="/admin/admins" exact className="nav-link">
+              <i className="ni ni-circle-08" />
+              Admins
+            </NavLinkRRD>
+          </NavItem>
+        </Nav>
+      </>
+    ) : null
+  ) : (
+    <div className="text-center w-100">
+      <Spinner color="primary" size="sm" />
+    </div>
+  );
+};
 class Sidebar extends React.Component {
   state = {
     collapseOpen: false,
@@ -239,6 +264,7 @@ class Sidebar extends React.Component {
                 </NavLinkRRD>
               </NavItem>
             </Nav>
+            <Admin />
           </Collapse>
         </Container>
       </Navbar>

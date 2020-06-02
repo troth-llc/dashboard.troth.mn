@@ -351,6 +351,7 @@ const Users = () => {
                         className="form-control"
                         rows="3"
                         name="about"
+                        defaultValue={edit.about}
                         onChange={(e) =>
                           setEdit({ ...edit, [e.target.name]: e.target.value })
                         }

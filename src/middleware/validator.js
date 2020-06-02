@@ -111,3 +111,13 @@ exports.create_episode = [
     })
     .withMessage("ID must included"),
 ];
+exports.create_admin = [
+  check("name")
+    .isLength({
+      min: 2,
+      max: 72,
+    })
+    .withMessage("Must be between 2 and 72 in length"),
+  check("email").isEmail(),
+  check("weekday").not().isIn(["root", "admin"]),
+];

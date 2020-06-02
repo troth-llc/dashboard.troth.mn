@@ -21,7 +21,9 @@ import axios from "axios";
 import moment from "moment";
 import { Link } from "react-router-dom";
 import "./style.scss";
+import dompurify from "dompurify";
 const Projects = () => {
+  const sanitizer = dompurify.sanitize;
   const [state, setState] = useState(null);
   const [modal, setModal] = useState(false);
   const toggle = () => setModal(!modal);
@@ -201,7 +203,9 @@ const Projects = () => {
                 </div>
                 <div
                   className="project-content"
-                  dangerouslySetInnerHTML={{ __html: project.content }}
+                  dangerouslySetInnerHTML={{
+                    __html: sanitizer(project.content),
+                  }}
                 ></div>
               </div>
               <div className="project-footer mt-4">

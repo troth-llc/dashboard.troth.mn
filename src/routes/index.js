@@ -11,4 +11,5 @@ router.use("/course", require("./course.js"));
 router.use("/episode", require("./episode"));
 router.use("/submission", require("./submission"));
 router.use("/project", require("./project"));
+router.use("/admin", require("./admin"));
 module.exports = router;
