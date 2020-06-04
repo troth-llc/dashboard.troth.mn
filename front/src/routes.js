@@ -100,7 +100,7 @@ var routes = [
   },
   {
     path: "/capstone/episode/:id",
-    name: "Course",
+    name: "Episode",
     icon: "ni ni-bullet-list-67 text-red",
     component: Episode,
     layout: "/admin",
@@ -108,7 +108,7 @@ var routes = [
   },
   {
     path: "/capstone/submission",
-    name: "Course",
+    name: "Submission",
     icon: "ni ni-bullet-list-67 text-red",
     component: Submission,
     layout: "/admin",
@@ -116,7 +116,7 @@ var routes = [
   },
   {
     path: "/capstone/invoice",
-    name: "Course",
+    name: "Invoices",
     icon: "ni ni-bullet-list-67 text-red",
     component: CapstoneInvoice,
     layout: "/admin",

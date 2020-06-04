@@ -32,7 +32,7 @@ const CapstoneInvoice = () => {
             <Card className="shadow">
               <CardHeader className="bg-transparent d-flex">
                 <h3 className="mb-0" style={{ lineHeight: "50px" }}>
-                  User Submissions
+                  Capstone Invoices
                 </h3>
               </CardHeader>
               <CardBody>
@@ -56,7 +56,7 @@ const CapstoneInvoice = () => {
                                 <th scope="col">Status</th>
                                 <th scope="col">Payment ID</th>
                                 <th scope="col">Transaction ID</th>
-                                <th scope="col">Bill ID</th>
+                                <th scope="col">Bill ID (User ID)</th>
                                 <th scope="col">Amount</th>
                                 <th scope="col">Created</th>
                               </tr>
