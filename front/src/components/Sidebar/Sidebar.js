@@ -245,6 +245,12 @@ class Sidebar extends React.Component {
                   Submissions
                 </NavLinkRRD>
               </NavItem>
+              <NavItem>
+                <NavLinkRRD to="/admin/capstone/invoice" className="nav-link">
+                  <i className="ni ni-credit-card" />
+                  Invoice
+                </NavLinkRRD>
+              </NavItem>
             </Nav>
             <hr className="my-3" />
             {/* Heading */}

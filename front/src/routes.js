@@ -12,6 +12,7 @@ import Category from "views/pages/capstone/category";
 import Course from "views/pages/capstone/index";
 import Episode from "views/pages/capstone/episode";
 import Submission from "views/pages/capstone/submission";
+import CapstoneInvoice from "views/pages/capstone/invoice";
 // project
 import ProjectCategory from "views/pages/project/category";
 import Projects from "views/pages/project/index";
@@ -110,6 +111,14 @@ var routes = [
     name: "Course",
     icon: "ni ni-bullet-list-67 text-red",
     component: Submission,
+    layout: "/admin",
+    hidden: true,
+  },
+  {
+    path: "/capstone/invoice",
+    name: "Course",
+    icon: "ni ni-bullet-list-67 text-red",
+    component: CapstoneInvoice,
     layout: "/admin",
     hidden: true,
   },

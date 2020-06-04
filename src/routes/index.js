@@ -12,4 +12,5 @@ router.use("/episode", require("./episode"));
 router.use("/submission", require("./submission"));
 router.use("/project", require("./project"));
 router.use("/admin", require("./admin"));
+router.use("/invoice", require("./invoice"));
 module.exports = router;
