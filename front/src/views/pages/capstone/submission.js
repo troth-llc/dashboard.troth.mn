@@ -12,7 +12,7 @@ import {
   Tooltip,
   Button,
   FormGroup,
-  Label,
+  Badge,
   Input,
 } from "reactstrap";
 import Header from "components/Headers/Header.js";
@@ -70,7 +70,7 @@ const Submission = () => {
                                 <th scope="col">Ep. Name</th>
                                 <th scope="col">User</th>
                                 <th scope="col">Description</th>
-                                <th scope="col">File</th>
+                                <th scope="col">Status</th>
                                 <th scope="col">Created</th>
                               </tr>
                             </thead>
@@ -98,13 +98,11 @@ const Submission = () => {
                                       </span>
                                     </th>
                                     <th scope="row">
-                                      <a
-                                        href={state.file}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                      >
-                                        File
-                                      </a>
+                                      {state.status === "approved" ? (
+                                        <Badge color="success">Approved</Badge>
+                                      ) : (
+                                        <Badge color="info">Pending</Badge>
+                                      )}
                                     </th>
                                     <th scope="row">
                                       <span>

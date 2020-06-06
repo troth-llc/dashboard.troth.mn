@@ -14,28 +14,19 @@ const courseSchema = new Schema({
     type: String,
     default: null,
   },
-  category: {
-    type: Schema.Types.ObjectId,
-    ref: "category",
-    required: true,
-  },
+  category: { type: Schema.Types.ObjectId, ref: "category" },
   teacher: {
     type: String,
     default: null,
   },
-  episode: [
-    {
-      type: Schema.Types.ObjectId,
-      ref: "episode",
-    },
-  ],
+  episode: [{ type: Schema.Types.ObjectId, ref: "episode" }],
   updated: {
     type: Date,
-    default: new Date(),
+    default: Date.now,
   },
   created: {
     type: Date,
-    default: new Date(),
+    default: Date.now,
   },
 });
 const course = mongoose.model("course", courseSchema);

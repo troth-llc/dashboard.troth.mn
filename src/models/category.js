@@ -16,7 +16,7 @@ const categorySchema = new Schema({
   },
   created: {
     type: Date,
-    default: new Date(),
+    default: Date.now,
   },
 });
 const category = mongoose.model("category", categorySchema);

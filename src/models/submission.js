@@ -7,8 +7,8 @@ const submissionSchema = new Schema({
   description: { type: String, default: null },
   file: { type: String, required: true },
   status: { type: String, default: "pending" },
-  updated: { type: Date, default: new Date() },
-  created: { type: Date, default: new Date() },
+  updated: { type: Date, default: Date.now },
+  created: { type: Date, default: Date.now },
 });
 const submission = mongoose.model("submission", submissionSchema);
 module.exports = submission;
