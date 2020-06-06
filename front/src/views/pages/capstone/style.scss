@@ -38,3 +38,65 @@
 .has-danger label.form-control-label {
   color: #fb6340 !important;
 }
+// submission
+.submission-container {
+  h4 {
+    font-size: 14px;
+    font-weight: 400;
+  }
+  hr {
+    margin: 5px 0;
+  }
+  a {
+    font-size: 14px;
+  }
+  .description-scroller {
+    padding-top: 0.5rem;
+    max-height: 450px;
+    overflow-y: auto;
+  }
+  .submission-episode {
+    cursor: pointer;
+    font-size: 15px;
+    padding-bottom: 10px;
+    .ni {
+      vertical-align: middle;
+    }
+  }
+}
+// tooltip
+.episode-preview {
+  .tooltip {
+    z-index: 1060;
+  }
+  h4 {
+    color: #fff;
+  }
+  .tooltip-inner {
+    padding: 0.5rem;
+    width: 316px;
+    min-height: 200px;
+    max-width: 350px;
+  }
+  .episode-cover {
+    position: relative;
+    width: 300px;
+    padding-top: 56%;
+    .episode-image {
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-size: cover;
+    }
+  }
+}
+.tooltip-preload {
+  height: 184px;
+  align-items: center;
+  display: flex;
+  justify-content: center;
+}

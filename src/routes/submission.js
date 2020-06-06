@@ -12,4 +12,7 @@ const validate = require("../middleware/validator");
  *       200:
  */
 router.get("/", token, submission.index);
+router.get("/:id", token, submission.find);
+router.post("/remove", token, submission.remove);
+router.get("/approve/:id", token, submission.approve);
 module.exports = router;
