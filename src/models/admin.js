@@ -22,11 +22,11 @@ const userSchema = new Schema({
   },
   created: {
     type: Date,
-    default: new Date(),
+    default: Date.now,
   },
   updated: {
     type: Date,
-    default: new Date(),
+    default: Date.now,
   },
   reset_password_token: {
     type: String,
