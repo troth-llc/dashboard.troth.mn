@@ -75,6 +75,8 @@ exports.remove = (req, res) => {
           `Capstone Submission`,
           `Episode: <strong>${submission.episode.name}</strong> <br/>
           ${decline}
+          <hr/>
+          <p>${submission.description} <br/> <a href="${submission.file}" target="_blank">Download file</a></p>
           `
         );
         submission.remove();

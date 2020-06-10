@@ -174,7 +174,9 @@ const Submission = () => {
                         />
                       </div>
                       <div className="d-flex justify-content-between">
-                        <h4>{episode.name}</h4>
+                        <h4 className="tooltip-episode-name">
+                          sasdasdaddddddddddddddddddddddd{episode.name}
+                        </h4>
                         <span>{episode.duration}</span>
                       </div>
                     </div>

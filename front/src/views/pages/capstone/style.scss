@@ -100,3 +100,10 @@
   display: flex;
   justify-content: center;
 }
+.tooltip-episode-name {
+  max-width: 200px;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  height: 18px;
+  line-height: 18px;
+}
