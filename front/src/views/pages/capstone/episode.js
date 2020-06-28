@@ -223,6 +223,7 @@ const Episode = (props) => {
             upload.append("link", episode.link ? episode.link : episode.video);
             upload.append("free", episode.free ? episode.free : false);
             upload.append("id", props.match.params.id);
+            upload.append("notify", episode.notify);
             if (episode._id) upload.append("episode_id", episode._id);
             axios({
               method: "post",
@@ -472,7 +473,7 @@ const Episode = (props) => {
                     />
                   </FormGroup>
                 </Col>
-                <Col lg="12">
+                <Col lg="6">
                   <div className="custom-control custom-checkbox">
                     <input
                       type="checkbox"
@@ -495,6 +496,27 @@ const Episode = (props) => {
                     </label>
                   </div>
                 </Col>
+                {!episode._id ? (
+                  <Col lg="6">
+                    <div className="custom-control custom-checkbox">
+                      <input
+                        type="checkbox"
+                        className="custom-control-input"
+                        id="notify"
+                        name="notify"
+                        onClick={(e) =>
+                          setEpisode({
+                            ...episode,
+                            [e.target.name]: e.target.checked,
+                          })
+                        }
+                      />
+                      <label className="custom-control-label" htmlFor="notify">
+                        Notify users
+                      </label>
+                    </div>
+                  </Col>
+                ) : null}
               </Row>
             </div>
           </ModalBody>

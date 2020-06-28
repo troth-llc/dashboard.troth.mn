@@ -29,7 +29,7 @@ var data = [
       {
         name: "admin",
         email: "tuguldur@troth.mn",
-        password: "sdaminee",
+        password: "password",
         type: "root",
       },
     ],

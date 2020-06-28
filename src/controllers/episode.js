@@ -107,6 +107,9 @@ exports.create = (req, res) => {
     blobStream.on("error", (err) => {
       console.log(err);
     });
+    if (req.body.notify === true) {
+      console.log("call web-push");
+    }
     blobStream.on("finish", async () => {
       // The public URL can be used to directly access the file via HTTP.
       const cover = `https://cdn.troth.mn/${blob.name}`;
