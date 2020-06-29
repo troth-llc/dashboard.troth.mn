@@ -151,7 +151,7 @@ This repository has the following structure:
     └───seed
 ```
 
-## Google Services
+## Vimeo, Google Services
 
 **Virtual Machine** [https://cloud.google.com/compute/docs/instances](https://cloud.google.com/compute/docs/instances)<br>
 **Storage** _google-storage.json_
